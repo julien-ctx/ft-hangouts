@@ -1,5 +1,5 @@
 export default {
-  home: {
-    title: "Your contacts",
+  contactList: {
+    title: "Contacts",
   },
 }
