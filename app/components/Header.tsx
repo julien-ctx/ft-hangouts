@@ -1,5 +1,6 @@
 import React from "react"
+import { Text } from "react-native"
 
 export const Header = () => {
-  return <></>
+  return <Text>Header</Text>
 }
