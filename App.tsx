@@ -7,7 +7,7 @@
 
 import React from "react"
 import { SafeAreaView, StyleSheet, View } from "react-native"
-import { Header } from "./app/components/Header"
+import { Header } from "./app/components/Header/Header"
 import { LanguageProvider } from "./app/providers/language/LanguageProvider"
 
 function App(): JSX.Element {

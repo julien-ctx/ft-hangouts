@@ -1,5 +1,5 @@
 import React from "react"
-import { Header } from "react-native/Libraries/NewAppScreen"
+import { Header } from "../components/Header/Header"
 
 export const ContactList = () => {
   return (
