@@ -1,6 +1,7 @@
-import { Image, Pressable, StyleSheet } from "react-native"
+import { Image, StyleSheet } from "react-native"
 import React from "react"
 import { Language } from "../../providers/language/Language.typing"
+import { Pressable } from "../Pressable/Pressable"
 
 interface Props {
   icon: Language

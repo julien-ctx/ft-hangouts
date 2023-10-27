@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Image, Pressable, StyleSheet, Text, View } from "react-native"
+import { Image, StyleSheet, Text, View } from "react-native"
 import { LanguageContext } from "../../providers/language/LanguageContext"
 import en from "../../locales/en"
 import fr from "../../locales/fr"
@@ -7,6 +7,7 @@ import { colors } from "../../utils/theme/colors"
 import { spacing } from "../../utils/theme/spacing"
 import { ColorSelectionButton } from "./ColorSelectionButton"
 import { LanguageSelectionIcon } from "./LanguageSelectionIcon"
+import { Pressable } from "../Pressable/Pressable"
 
 export const Header = () => {
   const { language, setLanguage } = useContext(LanguageContext)
