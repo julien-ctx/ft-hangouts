@@ -1,9 +1,10 @@
 import React, { useContext } from "react"
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { Image, Pressable, StyleSheet, Text, View } from "react-native"
 import { Language } from "../providers/language/Language.typing"
 import { LanguageContext } from "../providers/language/LanguageContext"
 import en from "../locales/en"
 import fr from "../locales/fr"
+import { colors } from "../utils/theme/colors"
 
 export const Header = () => {
   const { language, setLanguage } = useContext(LanguageContext)
@@ -18,10 +19,22 @@ export const Header = () => {
       <View style={styles.container}>
         <View style={styles.languageButtons}>
           <Pressable onPress={() => handleLanguageIconPress("en")}>
-            <Text>En</Text>
+            <Image
+              source={require("../../assets/usa.png")}
+              style={[
+                styles.buttonContainer,
+                language === "en" && styles.highlightIcon,
+              ]}
+            />
           </Pressable>
           <Pressable onPress={() => handleLanguageIconPress("fr")}>
-            <Text>Fr</Text>
+            <Image
+              source={require("../../assets/france.png")}
+              style={[
+                styles.buttonContainer,
+                language === "fr" && styles.highlightIcon,
+              ]}
+            />
           </Pressable>
         </View>
         <View style={styles.titleView}>
@@ -29,7 +42,10 @@ export const Header = () => {
         </View>
         <View style={styles.colorButton}>
           <Pressable onPress={() => {}}>
-            <Text>Color</Text>
+            <Image
+              source={require("../../assets/hamburger-menu.png")}
+              style={styles.buttonContainer}
+            />
           </Pressable>
         </View>
       </View>
@@ -49,7 +65,7 @@ const styles = StyleSheet.create({
   backgroundView: {
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    backgroundColor: "#3872e8",
+    backgroundColor: colors.primary,
   },
   title: {
     fontSize: 16,
@@ -72,5 +88,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-end",
     justifyContent: "center",
+  },
+  buttonContainer: {
+    height: 22,
+    width: 22,
+  },
+  highlightIcon: {
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 11,
   },
 })
