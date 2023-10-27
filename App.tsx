@@ -7,15 +7,15 @@
 
 import React from "react"
 import { SafeAreaView, StyleSheet, View } from "react-native"
-import { Header } from "./app/components/Header/Header"
 import { LanguageProvider } from "./app/providers/language/LanguageProvider"
+import { ContactList } from "./app/screens/ContactList"
 
 function App(): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <LanguageProvider>
         <View>
-          <Header />
+          <ContactList />
         </View>
       </LanguageProvider>
     </SafeAreaView>

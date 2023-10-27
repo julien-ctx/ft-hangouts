@@ -17,7 +17,7 @@ export const Header = () => {
   const [headerColor, setHeaderColor] = useState<string>(colors.primary)
 
   return (
-    <>
+    <View style={styles.headerView}>
       <View
         style={[
           isExpanded
@@ -83,14 +83,14 @@ export const Header = () => {
           />
         </View>
       )}
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.md,
-    paddingVertical: 15,
+    paddingVertical: spacing.sm,
     flexDirection: "row",
   },
   backgroundViewNotExpanded: {
@@ -129,5 +129,8 @@ const styles = StyleSheet.create({
   },
   colorSelectionView: {
     justifyContent: "space-between",
+  },
+  headerView: {
+    marginBottom: spacing.sm,
   },
 })
