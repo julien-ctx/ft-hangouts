@@ -6,6 +6,7 @@ import fr from "../../locales/fr"
 import { colors } from "../../utils/theme/colors"
 import { spacing } from "../../utils/theme/spacing"
 import { ColorSelectionButton } from "./ColorSelectionButton"
+import { LanguageSelectionIcon } from "./LanguageSelectionIcon"
 
 export const Header = () => {
   const { language, setLanguage } = useContext(LanguageContext)
@@ -26,24 +27,16 @@ export const Header = () => {
       >
         <View style={styles.container}>
           <View style={styles.languageButtons}>
-            <Pressable onPress={() => setLanguage("en")}>
-              <Image
-                source={require("../../../assets/usa.png")}
-                style={[
-                  styles.buttonContainer,
-                  language === "en" && styles.highlightIcon,
-                ]}
-              />
-            </Pressable>
-            <Pressable onPress={() => setLanguage("fr")}>
-              <Image
-                source={require("../../../assets/france.png")}
-                style={[
-                  styles.buttonContainer,
-                  language === "fr" && styles.highlightIcon,
-                ]}
-              />
-            </Pressable>
+            <LanguageSelectionIcon
+              icon="en"
+              onPress={() => setLanguage("en")}
+              highlightIcon={language === "en"}
+            />
+            <LanguageSelectionIcon
+              icon="fr"
+              onPress={() => setLanguage("fr")}
+              highlightIcon={language === "fr"}
+            />
           </View>
           <View style={styles.titleView}>
             <Text style={styles.title}>{locale.contactList.title}</Text>
@@ -132,11 +125,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     height: 22,
     width: 22,
-  },
-  highlightIcon: {
-    borderWidth: 1,
-    borderColor: "white",
-    borderRadius: 11,
   },
   colorSelectionView: {
     justifyContent: "space-between",

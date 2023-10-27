@@ -1,5 +1,5 @@
 export const colors = {
-  primary: "#3872e8",
+  primary: "#3399ff",
 
   palette: {
     grey100: "#FDFDF9",
