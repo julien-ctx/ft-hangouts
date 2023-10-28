@@ -1,17 +1,19 @@
 import React, { useContext, useState } from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
 import { LanguageContext } from "../../providers/language/LanguageContext"
-import en from "../../locales/en"
-import fr from "../../locales/fr"
+
 import { colors } from "../../utils/theme/colors"
 import { spacing } from "../../utils/theme/spacing"
 import { ColorSelectionButton } from "./ColorSelectionButton"
 import { LanguageSelectionIcon } from "./LanguageSelectionIcon"
 import { Pressable } from "../Pressable/Pressable"
 
-export const Header = () => {
+interface Props {
+  title: string
+}
+
+export const Header = ({ title }: Props) => {
   const { language, setLanguage } = useContext(LanguageContext)
-  const locale = language === "en" ? en : fr
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [headerColor, setHeaderColor] = useState<string>(colors.primary)
@@ -40,7 +42,7 @@ export const Header = () => {
             />
           </View>
           <View style={styles.titleView}>
-            <Text style={styles.title}>{locale.contactList.title}</Text>
+            <Text style={styles.title}>{title}</Text>
           </View>
           <View style={styles.colorButton}>
             <Pressable onPress={() => setIsExpanded(!isExpanded)}>
@@ -105,6 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white",
     fontWeight: "bold",
+    textAlign: "center",
   },
   languageButtons: {
     flexDirection: "row",
