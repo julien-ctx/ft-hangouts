@@ -29,7 +29,7 @@ export const createTables = async (db: SQLiteDatabase) => {
       first_name TEXT,
       name TEXT,
       phone_number TEXT,
-      email TEXT,
+      email TEXT
 	  );
   `
 
@@ -40,7 +40,7 @@ export const createTables = async (db: SQLiteDatabase) => {
 export const getContacts = async (db: SQLiteDatabase): Promise<Contact[]> => {
   try {
     const Contacts: Contact[] = []
-    const results = await db.executeSql("SELECT rowid as id FROM Contacts")
+    const results = await db.executeSql("SELECT * FROM Contacts")
     results.forEach((result) => {
       for (let index = 0; index < result.rows.length; index++) {
         Contacts.push(result.rows.item(index))
@@ -56,7 +56,7 @@ export const getContacts = async (db: SQLiteDatabase): Promise<Contact[]> => {
 export const addContact = async (db: SQLiteDatabase, contact: Contact) => {
   const insertQuery = `
 	  INSERT INTO Contacts (first_name, name, phone_number, email)
-	  VALUES (?, ?, ?, ?, ?);
+	  VALUES (?, ?, ?, ?);
 	`
 
   const values = [
@@ -69,7 +69,12 @@ export const addContact = async (db: SQLiteDatabase, contact: Contact) => {
   return db.executeSql(insertQuery, values)
 }
 
-// export const deleteContact = async (db: SQLiteDatabase, id: number) => {
-//   const deleteQuery = `DELETE from ${tableName} where rowid = ${id}`
-//   await db.executeSql(deleteQuery)
-// }
+export const clearTable = async (db: SQLiteDatabase, tableName: string) => {
+  try {
+    const query = `DELETE FROM ${tableName};`
+    await db.executeSql(query)
+  } catch (error) {
+    console.error(error)
+    throw Error(`Failed to clear ${tableName} table`)
+  }
+}

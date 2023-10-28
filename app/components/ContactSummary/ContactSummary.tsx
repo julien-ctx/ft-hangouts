@@ -11,6 +11,7 @@ interface Props {
 }
 
 export const ContactSummary = ({ contact, onPress }: Props) => {
+  console.log(contact)
   return (
     <View style={styles.container}>
       <View style={styles.contactView}>

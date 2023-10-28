@@ -12,7 +12,7 @@ import { TextInput } from "../components/TextInput/TextInput"
 import { colors } from "../utils/theme/colors"
 import plus from "../../assets/plus.png"
 import { PlainButton } from "../components/PlainButton/PlainButton"
-import { addContact, connectToDatabase } from "../db/dbService"
+import { addContact, connectToDatabase, createTables } from "../db/dbService"
 
 interface Props {
   contacts: Contact[]
@@ -35,6 +35,7 @@ export const ContactList = ({ contacts }: Props) => {
   const handleAddContact = async () => {
     setAddContactView(true)
     const db = await connectToDatabase()
+    await createTables(db)
     addContact(db, { firstName, name, phoneNumber, email })
     setAddContactView(false)
   }
@@ -45,12 +46,14 @@ export const ContactList = ({ contacts }: Props) => {
         <>
           <Header title={locale.contactList.allContacts} />
           <View style={styles.container}>
-            {contacts.map((contact) => {
+            {contacts.map((contact, index) => {
               return (
-                <ContactSummary
-                  contact={contact}
-                  onPress={() => handleRemoveContact()}
-                />
+                <View key={index}>
+                  <ContactSummary
+                    contact={contact}
+                    onPress={() => handleRemoveContact()}
+                  />
+                </View>
               )
             })}
           </View>
