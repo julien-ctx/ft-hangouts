@@ -1,25 +1,35 @@
-import { StyleSheet, Text, View } from "react-native"
+import { Image, StyleSheet, Text, View } from "react-native"
 import { colors } from "../../utils/theme/colors"
 import { Contact } from "./ContactSummary.typing"
 import React from "react"
 import { spacing } from "../../utils/theme/spacing"
+import { Pressable } from "../Pressable/Pressable"
 
 interface Props {
   contact: Contact
+  onPress: () => void
 }
 
-export const ContactSummary = ({ contact }: Props) => {
+export const ContactSummary = ({ contact, onPress }: Props) => {
   return (
     <View style={styles.container}>
-      <View style={styles.iconButton}>
-        <Text>{contact.firstName[0].toUpperCase()}</Text>
+      <View style={styles.contactView}>
+        <View style={styles.iconButton}>
+          <Text>{contact.firstName[0].toUpperCase()}</Text>
+        </View>
+        <View style={styles.information}>
+          <Text>
+            {contact.firstName} {contact.name}
+          </Text>
+          <Text style={styles.phoneNumber}>{contact.phoneNumber}</Text>
+        </View>
       </View>
-      <View style={styles.information}>
-        <Text>
-          {contact.firstName} {contact.name}
-        </Text>
-        <Text style={styles.phoneNumber}>{contact.phoneNumber}</Text>
-      </View>
+      <Pressable onPress={onPress}>
+        <Image
+          source={require("../../../assets/trash.png")}
+          style={styles.trash}
+        />
+      </Pressable>
     </View>
   )
 }
@@ -31,6 +41,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     borderRadius: 10,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   iconButton: {
     backgroundColor: colors.palette.grey400,
@@ -39,6 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 16,
+    marginRight: 10,
   },
   information: {
     flexDirection: "column",
@@ -48,5 +61,16 @@ const styles = StyleSheet.create({
   phoneNumber: {
     fontStyle: "italic",
     fontSize: 10,
+    color: colors.palette.grey600,
+  },
+  trash: {
+    height: 24,
+    width: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 16,
+  },
+  contactView: {
+    flexDirection: "row",
   },
 })

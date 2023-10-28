@@ -5,6 +5,10 @@ import { StyleSheet, View } from "react-native"
 import { spacing } from "../utils/theme/spacing"
 
 export const ContactList = () => {
+  const handleContactDeletion = () => {
+    console.log("ContactDeletion")
+  }
+
   return (
     <>
       <Header />
@@ -15,6 +19,23 @@ export const ContactList = () => {
             name: "Caucheteux",
             phoneNumber: "+33600000000",
           }}
+          onPress={() => handleContactDeletion()}
+        />
+        <ContactSummary
+          contact={{
+            firstName: "Julien",
+            name: "Caucheteux",
+            phoneNumber: "+33600000000",
+          }}
+          onPress={() => handleContactDeletion()}
+        />
+        <ContactSummary
+          contact={{
+            firstName: "Julien",
+            name: "Caucheteux",
+            phoneNumber: "+33600000000",
+          }}
+          onPress={() => handleContactDeletion()}
         />
       </View>
     </>
@@ -24,5 +45,7 @@ export const ContactList = () => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.md,
+    flexDirection: "column",
+    gap: spacing.sm,
   },
 })
