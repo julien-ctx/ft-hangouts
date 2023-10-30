@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Header } from "../components/Header/Header"
 import { ContactSummary } from "../components/ContactSummary/ContactSummary"
-import { StyleSheet, Text, View } from "react-native"
+import { FlatList, StyleSheet, Text, View } from "react-native"
 import { spacing } from "../utils/theme/spacing"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
 import { Pressable } from "../components/Pressable/Pressable"
@@ -37,21 +37,31 @@ export const ContactList = ({
   return (
     <>
       <Header title={locale.contactList.allContacts} />
-      <View style={styles.container}>
-        {contacts.map((contact, index) => {
-          return (
-            <View key={index}>
-              <ContactSummary
-                contact={contact}
-                onPress={() => handleRemoveContact(contact)}
-              />
-            </View>
-          )
-        })}
+      <View style={styles.screenContainer}>
+        <FlatList
+          style={styles.container}
+          data={contacts}
+          keyExtractor={(item) => item.phoneNumber}
+          renderItem={({ item }) => (
+            <ContactSummary
+              contact={item}
+              onPress={() => handleRemoveContact(item)}
+            />
+          )}
+          contentContainerStyle={styles.contentContainer}
+        />
       </View>
-      <Pressable onPress={() => setCurrentScreen("AddContact")}>
-        <Text>Add</Text>
-      </Pressable>
+      <View style={styles.actionView}>
+        <Pressable onPress={() => setCurrentScreen("AddContact")}>
+          <Text>Add</Text>
+        </Pressable>
+        <Pressable
+          style={styles.actionView}
+          onPress={() => setCurrentScreen("AddContact")}
+        >
+          <Text>Add</Text>
+        </Pressable>
+      </View>
     </>
   )
 }
@@ -59,7 +69,19 @@ export const ContactList = ({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.md,
-    flexDirection: "column",
+  },
+  screenContainer: {
+    flex: 1,
+    height: "100%",
+    width: "100%",
+  },
+  contentContainer: {
     gap: spacing.sm,
+  },
+  actionView: {
+    height: 30,
+    justifyContent: "space-between",
+    marginHorizontal: spacing.md,
+    flexDirection: "row",
   },
 })

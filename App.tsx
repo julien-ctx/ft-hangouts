@@ -35,9 +35,9 @@ function App(): JSX.Element {
   }, [loadDataCallback])
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <LanguageProvider>
-        <View>
+        <View style={styles.screenContainer}>
           {currentScreen === "ContactList" && (
             <ContactList
               contacts={contacts}
@@ -59,8 +59,9 @@ function App(): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  screenContainer: {
+    height: "100%",
+    width: "100%",
   },
 })
 
