@@ -54,10 +54,17 @@ export const AddContact = ({
       addContact(db, newContact)
       setContacts([...contacts, newContact])
       setCurrentScreen("ContactList")
+    } else if (
+      contacts.find((contact) => contact.phoneNumber === phoneNumber)
+    ) {
+      Alert.alert(
+        locale.addContact.alreadyExistingContactAlert.title,
+        locale.addContact.alreadyExistingContactAlert.subtitle
+      )
     } else {
       Alert.alert(
-        locale.addContact.formAlert.title,
-        locale.addContact.formAlert.subtitle
+        locale.addContact.wrongFieldsAlert.title,
+        locale.addContact.wrongFieldsAlert.subtitle
       )
     }
   }

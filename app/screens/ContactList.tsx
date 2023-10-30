@@ -9,18 +9,29 @@ import en from "../locales/en"
 import fr from "../locales/fr"
 import { LanguageContext } from "../providers/language/LanguageContext"
 import { CurrentScreen } from "../../App"
+import { connectToDatabase, removeContact } from "../db/dbService"
 
 interface Props {
   contacts: Contact[]
+  setContacts: (contacts: Contact[]) => void
   setCurrentScreen: (currentScreen: CurrentScreen) => void
 }
 
-export const ContactList = ({ contacts, setCurrentScreen }: Props) => {
+export const ContactList = ({
+  contacts,
+  setContacts,
+  setCurrentScreen,
+}: Props) => {
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
 
-  const handleRemoveContact = () => {
-    console.log("ContactDeletion")
+  const handleRemoveContact = async (contact: Contact) => {
+    const db = await connectToDatabase()
+    removeContact(db, contact)
+    const newContactArray = contacts.filter(
+      (currentContact) => currentContact !== contact
+    )
+    setContacts(newContactArray)
   }
 
   return (
@@ -32,7 +43,7 @@ export const ContactList = ({ contacts, setCurrentScreen }: Props) => {
             <View key={index}>
               <ContactSummary
                 contact={contact}
-                onPress={() => handleRemoveContact()}
+                onPress={() => handleRemoveContact(contact)}
               />
             </View>
           )

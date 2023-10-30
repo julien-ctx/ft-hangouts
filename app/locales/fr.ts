@@ -11,10 +11,14 @@ export default {
       phoneNumber: "Numéro de téléphone",
       email: "Email",
     },
-    formAlert: {
+    wrongFieldsAlert: {
       title: "Certains champs sont manquants ou incorrect",
       subtitle:
         "Assurez-vous que le numéro de téléphone et l'email ont un format correct",
+    },
+    alreadyExistingContactAlert: {
+      title: "Impossible d'ajouter le contact",
+      subtitle: "Il existe déjà un contact avec le meme numéro de téléphone",
     },
   },
 }

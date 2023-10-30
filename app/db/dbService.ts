@@ -69,6 +69,22 @@ export const addContact = async (db: SQLiteDatabase, contact: Contact) => {
   return db.executeSql(insertQuery, values)
 }
 
+export const removeContact = async (db: SQLiteDatabase, contact: Contact) => {
+  try {
+    const deleteQuery = `
+      DELETE FROM Contacts
+      WHERE name = ? AND phoneNumber = ? AND email = ?;
+    `
+
+    const values = [contact.name, contact.phoneNumber, contact.email]
+
+    return db.executeSql(deleteQuery, values)
+  } catch (error) {
+    console.error(error)
+    throw Error("Failed to remove contact")
+  }
+}
+
 export const clearTable = async (db: SQLiteDatabase, tableName: string) => {
   try {
     const query = `DELETE FROM ${tableName};`

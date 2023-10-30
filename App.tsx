@@ -41,6 +41,7 @@ function App(): JSX.Element {
           {currentScreen === "ContactList" && (
             <ContactList
               contacts={contacts}
+              setContacts={setContacts}
               setCurrentScreen={setCurrentScreen}
             />
           )}
