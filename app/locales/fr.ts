@@ -11,5 +11,10 @@ export default {
       phoneNumber: "Numéro de téléphone",
       email: "Email",
     },
+    formAlert: {
+      title: "Certains champs sont manquants ou incorrect",
+      subtitle:
+        "Assurez-vous que le numéro de téléphone et l'email ont un format correct",
+    },
   },
 }

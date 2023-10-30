@@ -55,7 +55,10 @@ export const AddContact = ({
       setContacts([...contacts, newContact])
       setCurrentScreen("ContactList")
     } else {
-      Alert.alert("Some fields are wrong", "Check that ")
+      Alert.alert(
+        locale.addContact.formAlert.title,
+        locale.addContact.formAlert.subtitle
+      )
     }
   }
 
