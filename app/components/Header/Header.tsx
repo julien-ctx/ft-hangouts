@@ -78,7 +78,6 @@ export const Header = ({ title }: Props) => {
             color={colors.palette.red}
             highlightIcon={color === colors.palette.red}
             onPress={() => {
-              console.log("test")
               setColor(colors.palette.red)
             }}
           />
