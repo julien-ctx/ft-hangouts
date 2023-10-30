@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, { useCallback, useEffect, useState } from "react"
 import { SafeAreaView, StyleSheet, View } from "react-native"
 import { LanguageProvider } from "./app/providers/language/LanguageProvider"
@@ -15,8 +8,13 @@ import {
   getContacts,
 } from "./app/db/dbService"
 import { Contact } from "./app/components/ContactSummary/ContactSummary.typing"
+import { AddContact } from "./app/screens/AddContact"
+
+export type CurrentScreen = "ContactList" | "AddContact"
 
 function App(): JSX.Element {
+  const [currentScreen, setCurrentScreen] =
+    useState<CurrentScreen>("ContactList")
   const [contacts, setContacts] = useState<Contact[]>([])
 
   const loadDataCallback = useCallback(async () => {
@@ -40,7 +38,19 @@ function App(): JSX.Element {
     <SafeAreaView style={styles.container}>
       <LanguageProvider>
         <View>
-          <ContactList contacts={contacts} setContacts={setContacts} />
+          {currentScreen === "ContactList" && (
+            <ContactList
+              contacts={contacts}
+              setCurrentScreen={setCurrentScreen}
+            />
+          )}
+          {currentScreen === "AddContact" && (
+            <AddContact
+              setCurrentScreen={setCurrentScreen}
+              contacts={contacts}
+              setContacts={setContacts}
+            />
+          )}
         </View>
       </LanguageProvider>
     </SafeAreaView>
