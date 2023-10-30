@@ -18,17 +18,17 @@ export const connectToDatabase = async () => {
 export const createTables = async (db: SQLiteDatabase) => {
   const userPreferencesQuery = `
 	  CREATE TABLE IF NOT EXISTS UserPreferences (
-      color_preference TEXT,
-      language_preference TEXT
+      colorPreference TEXT,
+      languagePreference TEXT
 	  );
   `
 
   const contactsQuery = `
 	  CREATE TABLE IF NOT EXISTS Contacts (
-      contact_id INTEGER PRIMARY KEY AUTOINCREMENT,
-      first_name TEXT,
+      contactId INTEGER PRIMARY KEY AUTOINCREMENT,
+      firstName TEXT,
       name TEXT,
-      phone_number TEXT,
+      phoneNumber TEXT,
       email TEXT
 	  );
   `
@@ -55,7 +55,7 @@ export const getContacts = async (db: SQLiteDatabase): Promise<Contact[]> => {
 
 export const addContact = async (db: SQLiteDatabase, contact: Contact) => {
   const insertQuery = `
-	  INSERT INTO Contacts (first_name, name, phone_number, email)
+	  INSERT INTO Contacts (firstName, name, phoneNumber, email)
 	  VALUES (?, ?, ?, ?);
 	`
 
@@ -76,5 +76,17 @@ export const clearTable = async (db: SQLiteDatabase, tableName: string) => {
   } catch (error) {
     console.error(error)
     throw Error(`Failed to clear ${tableName} table`)
+  }
+}
+
+export const removeTables = async (db: SQLiteDatabase) => {
+  try {
+    const contactsQuery = `DROP TABLE IF EXISTS Contacts;`
+    const userPreferencesQuery = `DROP TABLE IF EXISTS UserPreferences;`
+    await db.executeSql(contactsQuery)
+    await db.executeSql(userPreferencesQuery)
+  } catch (error) {
+    console.error(error)
+    throw Error(`Failed to drop tables`)
   }
 }

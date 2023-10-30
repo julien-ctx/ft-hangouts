@@ -40,7 +40,7 @@ function App(): JSX.Element {
     <SafeAreaView style={styles.container}>
       <LanguageProvider>
         <View>
-          <ContactList contacts={contacts} />
+          <ContactList contacts={contacts} setContacts={setContacts} />
         </View>
       </LanguageProvider>
     </SafeAreaView>
