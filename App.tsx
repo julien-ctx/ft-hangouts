@@ -9,6 +9,7 @@ import {
 } from "./app/db/dbService"
 import { Contact } from "./app/components/ContactSummary/ContactSummary.typing"
 import { AddContact } from "./app/screens/AddContact"
+import { ColorProvider } from "./app/providers/color/ColorProvider"
 
 export type CurrentScreen = "ContactList" | "AddContact"
 
@@ -37,22 +38,24 @@ function App(): JSX.Element {
   return (
     <SafeAreaView>
       <LanguageProvider>
-        <View style={styles.screenContainer}>
-          {currentScreen === "ContactList" && (
-            <ContactList
-              contacts={contacts}
-              setContacts={setContacts}
-              setCurrentScreen={setCurrentScreen}
-            />
-          )}
-          {currentScreen === "AddContact" && (
-            <AddContact
-              setCurrentScreen={setCurrentScreen}
-              contacts={contacts}
-              setContacts={setContacts}
-            />
-          )}
-        </View>
+        <ColorProvider>
+          <View style={styles.screenContainer}>
+            {currentScreen === "ContactList" && (
+              <ContactList
+                contacts={contacts}
+                setContacts={setContacts}
+                setCurrentScreen={setCurrentScreen}
+              />
+            )}
+            {currentScreen === "AddContact" && (
+              <AddContact
+                setCurrentScreen={setCurrentScreen}
+                contacts={contacts}
+                setContacts={setContacts}
+              />
+            )}
+          </View>
+        </ColorProvider>
       </LanguageProvider>
     </SafeAreaView>
   )

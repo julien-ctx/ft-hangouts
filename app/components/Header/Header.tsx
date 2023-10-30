@@ -7,6 +7,7 @@ import { spacing } from "../../utils/theme/spacing"
 import { ColorSelectionButton } from "./ColorSelectionButton"
 import { LanguageSelectionIcon } from "./LanguageSelectionIcon"
 import { Pressable } from "../Pressable/Pressable"
+import { ColorContext } from "../../providers/color/ColorContext"
 
 interface Props {
   title: string
@@ -14,9 +15,9 @@ interface Props {
 
 export const Header = ({ title }: Props) => {
   const { language, setLanguage } = useContext(LanguageContext)
+  const { color, setColor } = useContext(ColorContext)
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
-  const [headerColor, setHeaderColor] = useState<string>(colors.primary)
 
   return (
     <View style={styles.headerView}>
@@ -25,7 +26,7 @@ export const Header = ({ title }: Props) => {
           isExpanded
             ? styles.backgroundViewExpanded
             : styles.backgroundViewNotExpanded,
-          { backgroundColor: headerColor },
+          { backgroundColor: color },
         ]}
       >
         <View style={styles.container}>
@@ -60,28 +61,31 @@ export const Header = ({ title }: Props) => {
             styles.container,
             styles.backgroundViewNotExpanded,
             styles.colorSelectionView,
-            { backgroundColor: headerColor },
+            { backgroundColor: color },
           ]}
         >
           <ColorSelectionButton
             color={colors.primary}
-            highlightIcon={headerColor === colors.primary}
-            onPress={() => setHeaderColor(colors.primary)}
+            highlightIcon={color === colors.primary}
+            onPress={() => setColor(colors.primary)}
           />
           <ColorSelectionButton
             color={colors.palette.orange}
-            highlightIcon={headerColor === colors.palette.orange}
-            onPress={() => setHeaderColor(colors.palette.orange)}
+            highlightIcon={color === colors.palette.orange}
+            onPress={() => setColor(colors.palette.orange)}
           />
           <ColorSelectionButton
             color={colors.palette.red}
-            highlightIcon={headerColor === colors.palette.red}
-            onPress={() => setHeaderColor(colors.palette.red)}
+            highlightIcon={color === colors.palette.red}
+            onPress={() => {
+              console.log("test")
+              setColor(colors.palette.red)
+            }}
           />
           <ColorSelectionButton
             color={colors.palette.green}
-            highlightIcon={headerColor === colors.palette.green}
-            onPress={() => setHeaderColor(colors.palette.green)}
+            highlightIcon={color === colors.palette.green}
+            onPress={() => setColor(colors.palette.green)}
           />
         </View>
       )}

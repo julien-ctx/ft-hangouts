@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Header } from "../components/Header/Header"
 import { ContactSummary } from "../components/ContactSummary/ContactSummary"
-import { FlatList, StyleSheet, Text, View } from "react-native"
+import { FlatList, StyleSheet, View } from "react-native"
 import { spacing } from "../utils/theme/spacing"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
 import { Pressable } from "../components/Pressable/Pressable"
@@ -10,6 +10,9 @@ import fr from "../locales/fr"
 import { LanguageContext } from "../providers/language/LanguageContext"
 import { CurrentScreen } from "../../App"
 import { connectToDatabase, removeContact } from "../db/dbService"
+import { colors } from "../utils/theme/colors"
+import { Icon } from "../components/Icon/Icon"
+import plusButton from "../../assets/plusButton.png"
 
 interface Props {
   contacts: Contact[]
@@ -51,15 +54,9 @@ export const ContactList = ({
           contentContainerStyle={styles.contentContainer}
         />
       </View>
-      <View style={styles.actionView}>
+      <View style={[styles.actionView, styles.container]}>
         <Pressable onPress={() => setCurrentScreen("AddContact")}>
-          <Text>Add</Text>
-        </Pressable>
-        <Pressable
-          style={styles.actionView}
-          onPress={() => setCurrentScreen("AddContact")}
-        >
-          <Text>Add</Text>
+          <Icon icon={plusButton} size={30} />
         </Pressable>
       </View>
     </>
@@ -79,9 +76,11 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   actionView: {
-    height: 30,
-    justifyContent: "space-between",
-    marginHorizontal: spacing.md,
+    justifyContent: "flex-end",
+    backgroundColor: colors.palette.grey200,
     flexDirection: "row",
+    paddingVertical: spacing.sm,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 })

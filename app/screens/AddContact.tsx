@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { useState } from "react"
-import { Alert, Image, StyleSheet, Text, View } from "react-native"
+import { Alert, Image, StyleSheet, View } from "react-native"
 import { addContact, connectToDatabase } from "../db/dbService"
 import { CurrentScreen } from "../../App"
 import { LanguageContext } from "../providers/language/LanguageContext"
@@ -15,6 +15,8 @@ import { spacing } from "../utils/theme/spacing"
 import { Header } from "../components/Header/Header"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
 import { isValidEmail, isValidPhoneNumber } from "../utils/format/regex"
+import { Icon } from "../components/Icon/Icon"
+import backButton from "../../assets/backButton.png"
 
 interface Props {
   setCurrentScreen: (currentScreen: CurrentScreen) => void
@@ -72,41 +74,44 @@ export const AddContact = ({
   return (
     <>
       <Header title={locale.contactList.addContact} />
-      <View style={styles.container}>
-        <Image
-          source={require("../../assets/user.png")}
-          style={styles.userIcon}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.firstName}
-          value={firstName}
-          setNewValue={setFirstName}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.name}
-          value={name}
-          setNewValue={setName}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.phoneNumber}
-          value={phoneNumber}
-          setNewValue={setPhoneNumber}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.email}
-          value={email}
-          setNewValue={setEmail}
-        />
-        <View style={styles.marginTopView}>
-          <PlainButton
-            onPress={handleAddContact}
-            color={colors.primary}
-            text={locale.addContact.submitButtonTitle}
-            image={plus}
+      <View style={styles.screenContainer}>
+        <View style={styles.container}>
+          <Image
+            source={require("../../assets/user.png")}
+            style={styles.userIcon}
           />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.firstName}
+            value={firstName}
+            setNewValue={setFirstName}
+          />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.name}
+            value={name}
+            setNewValue={setName}
+          />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.phoneNumber}
+            value={phoneNumber}
+            setNewValue={setPhoneNumber}
+          />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.email}
+            value={email}
+            setNewValue={setEmail}
+          />
+          <View style={styles.marginTopView}>
+            <PlainButton
+              onPress={handleAddContact}
+              text={locale.addContact.submitButtonTitle}
+              image={plus}
+            />
+          </View>
         </View>
+      </View>
+      <View style={[styles.actionView, styles.container]}>
         <Pressable onPress={() => setCurrentScreen("ContactList")}>
-          <Text>Cancel</Text>
+          <Icon icon={backButton} size={30} />
         </Pressable>
       </View>
     </>
@@ -119,6 +124,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: spacing.sm,
   },
+  screenContainer: {
+    flex: 1,
+    height: "100%",
+    width: "100%",
+  },
   userIcon: {
     height: 42,
     width: 42,
@@ -128,5 +138,13 @@ const styles = StyleSheet.create({
   },
   marginTopView: {
     marginTop: spacing.sm,
+  },
+  actionView: {
+    justifyContent: "flex-end",
+    backgroundColor: colors.palette.grey200,
+    flexDirection: "row",
+    paddingVertical: spacing.sm,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 })

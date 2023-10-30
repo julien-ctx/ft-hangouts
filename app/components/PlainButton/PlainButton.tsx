@@ -1,16 +1,17 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Image, Pressable, StyleSheet, Text } from "react-native"
 import { spacing } from "../../utils/theme/spacing"
 import { colors } from "../../utils/theme/colors"
+import { ColorContext } from "../../providers/color/ColorContext"
 
 interface Props {
   text: string
-  color: string
   image: object
   onPress: () => void
 }
 
-export const PlainButton = ({ text, color, image, onPress }: Props) => {
+export const PlainButton = ({ text, image, onPress }: Props) => {
+  const { color } = useContext(ColorContext)
   return (
     <Pressable
       onPress={onPress}
