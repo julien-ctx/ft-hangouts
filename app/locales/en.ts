@@ -28,4 +28,11 @@ export default {
   editContact: {
     save: "Save",
   },
+  confirmationAlert: {
+    title: "Contact deletion",
+    subtitle: "Are you sure you want to delete this contact?",
+    confirm: "Yes",
+    cancel: "No",
+  },
+  emptyContactListMessage: "You don't have any contact",
 }

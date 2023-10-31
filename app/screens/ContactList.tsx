@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import { Header } from "../components/Header/Header"
 import { ContactSummary } from "../components/ContactSummary/ContactSummary"
-import { FlatList, StyleSheet, View } from "react-native"
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native"
 import { spacing } from "../utils/theme/spacing"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
 import { Pressable } from "../components/Pressable/Pressable"
@@ -43,11 +43,26 @@ export const ContactList = ({
     setContacts(newContactArray)
   }
 
-  const handleRemoveContactAndGoBack = async () => {
+  const handleRemoveContactAndGoBack = () => {
     if (showContactDetails) {
-      await handleRemoveContact(showContactDetails)
+      Alert.alert(
+        locale.confirmationAlert.title,
+        locale.confirmationAlert.subtitle,
+        [
+          {
+            text: locale.confirmationAlert.confirm,
+            onPress: async () => {
+              await handleRemoveContact(showContactDetails)
+              setShowContactDetails(null)
+            },
+          },
+          {
+            text: locale.confirmationAlert.cancel,
+            style: "cancel",
+          },
+        ]
+      )
     }
-    setShowContactDetails(null)
   }
 
   return (
@@ -56,20 +71,26 @@ export const ContactList = ({
         <>
           <Header title={locale.contactList.allContacts} />
           <View style={styles.screenContainer}>
-            <FlatList
-              style={styles.container}
-              data={contacts}
-              keyExtractor={(item) => item.phoneNumber}
-              renderItem={({ item }) => (
-                <Pressable onPress={() => setShowContactDetails(item)}>
-                  <ContactSummary
-                    contact={item}
-                    onPress={() => handleRemoveContact(item)}
-                  />
-                </Pressable>
-              )}
-              contentContainerStyle={styles.contentContainer}
-            />
+            {contacts.length ? (
+              <FlatList
+                style={styles.container}
+                data={contacts}
+                keyExtractor={(item) => item.phoneNumber}
+                renderItem={({ item }) => (
+                  <Pressable onPress={() => setShowContactDetails(item)}>
+                    <ContactSummary
+                      contact={item}
+                      onPress={() => handleRemoveContact(item)}
+                    />
+                  </Pressable>
+                )}
+                contentContainerStyle={styles.contentContainer}
+              />
+            ) : (
+              <Text style={styles.emptyContactListMessage}>
+                {locale.emptyContactListMessage}
+              </Text>
+            )}
           </View>
           <FooterNavigation
             firstIcon={plusButton}
@@ -112,5 +133,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: spacing.sm,
+  },
+  emptyContactListMessage: {
+    textAlign: "center",
   },
 })

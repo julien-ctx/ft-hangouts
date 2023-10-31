@@ -27,4 +27,11 @@ export default {
   editContact: {
     save: "Sauvegarder",
   },
+  confirmationAlert: {
+    title: "Suppression de contact",
+    subtitle: "Etes-vous sur de vouloir supprimer ce contact ?",
+    confirm: "Oui",
+    cancel: "Non",
+  },
+  emptyContactListMessage: "Vous n'avez pas de contacts",
 }

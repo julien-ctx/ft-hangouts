@@ -61,7 +61,7 @@ export const AddContact = ({
         <ContactFields
           onPress={handleAddContact}
           buttonIcon={plus}
-          buttonText="Add"
+          buttonText={locale.addContact.submitButtonTitle}
         />
       </View>
       <FooterNavigation
