@@ -34,17 +34,11 @@ export const ContactList = ({
     null
   )
 
-  const handleRemoveContact = async (contact: Contact) => {
-    const db = await connectToDatabase()
-    removeContact(db, contact)
-    const newContactArray = contacts.filter(
-      (currentContact) => currentContact !== contact
-    )
-    setContacts(newContactArray)
-  }
-
-  const handleRemoveContactAndGoBack = () => {
-    if (showContactDetails) {
+  const handleRemoveContact = (
+    contactToDelete: Contact,
+    deleteFromDetails: boolean
+  ) => {
+    if (contactToDelete) {
       Alert.alert(
         locale.confirmationAlert.title,
         locale.confirmationAlert.subtitle,
@@ -52,8 +46,15 @@ export const ContactList = ({
           {
             text: locale.confirmationAlert.confirm,
             onPress: async () => {
-              await handleRemoveContact(showContactDetails)
-              setShowContactDetails(null)
+              const db = await connectToDatabase()
+              removeContact(db, contactToDelete)
+              const newContactArray = contacts.filter(
+                (currentContact) => currentContact !== contactToDelete
+              )
+              setContacts(newContactArray)
+              if (deleteFromDetails) {
+                setShowContactDetails(null)
+              }
             },
           },
           {
@@ -80,7 +81,7 @@ export const ContactList = ({
                   <Pressable onPress={() => setShowContactDetails(item)}>
                     <ContactSummary
                       contact={item}
-                      onPress={() => handleRemoveContact(item)}
+                      onPress={() => handleRemoveContact(item, false)}
                     />
                   </Pressable>
                 )}
@@ -113,7 +114,7 @@ export const ContactList = ({
             firstOnPress={() => setShowContactDetails(null)}
             secondIcon={trash}
             secondOnPress={() => {
-              handleRemoveContactAndGoBack()
+              handleRemoveContact(showContactDetails, true)
             }}
           />
         </>
