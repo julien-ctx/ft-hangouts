@@ -24,4 +24,7 @@ export default {
   contactDetails: {
     edit: "Modifier contact",
   },
+  editContact: {
+    save: "Sauvegarder",
+  },
 }

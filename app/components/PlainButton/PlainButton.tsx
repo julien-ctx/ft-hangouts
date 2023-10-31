@@ -6,11 +6,11 @@ import { ColorContext } from "../../providers/color/ColorContext"
 
 interface Props {
   text: string
-  image: object
+  icon?: object | undefined
   onPress: () => void
 }
 
-export const PlainButton = ({ text, image, onPress }: Props) => {
+export const PlainButton = ({ text, icon, onPress }: Props) => {
   const { color } = useContext(ColorContext)
   return (
     <Pressable
@@ -18,7 +18,7 @@ export const PlainButton = ({ text, image, onPress }: Props) => {
       style={[{ backgroundColor: color }, styles.buttonView]}
     >
       <Text style={styles.textStyle}>{text}</Text>
-      <Image source={image} style={styles.imageView} />
+      {icon && <Image source={icon} style={styles.imageView} />}
     </Pressable>
   )
 }
