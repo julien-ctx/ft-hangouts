@@ -21,4 +21,7 @@ export default {
       subtitle: "Il existe déjà un contact avec le meme numéro de téléphone",
     },
   },
+  contactDetails: {
+    edit: "Modifier contact",
+  },
 }

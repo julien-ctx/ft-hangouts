@@ -22,4 +22,7 @@ export default {
         "There is already a contact with the same phone number in the database",
     },
   },
+  contactDetails: {
+    edit: "Edit contact",
+  },
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { Header } from "../components/Header/Header"
 import { ContactSummary } from "../components/ContactSummary/ContactSummary"
 import { FlatList, StyleSheet, View } from "react-native"
@@ -13,6 +13,7 @@ import { connectToDatabase, removeContact } from "../db/dbService"
 import { colors } from "../utils/theme/colors"
 import { Icon } from "../components/Icon/Icon"
 import plusButton from "../../assets/plusButton.png"
+import { ContactDetails } from "../components/ContactDetails/ContactDetails"
 
 interface Props {
   contacts: Contact[]
@@ -28,6 +29,10 @@ export const ContactList = ({
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
 
+  const [showContactDetails, setShowContactDetails] = useState<null | Contact>(
+    null
+  )
+
   const handleRemoveContact = async (contact: Contact) => {
     const db = await connectToDatabase()
     removeContact(db, contact)
@@ -39,24 +44,36 @@ export const ContactList = ({
 
   return (
     <>
-      <Header title={locale.contactList.allContacts} />
-      <View style={styles.screenContainer}>
-        <FlatList
-          style={styles.container}
-          data={contacts}
-          keyExtractor={(item) => item.phoneNumber}
-          renderItem={({ item }) => (
-            <ContactSummary
-              contact={item}
-              onPress={() => handleRemoveContact(item)}
+      {!showContactDetails && (
+        <>
+          <Header title={locale.contactList.allContacts} />
+          <View style={styles.screenContainer}>
+            <FlatList
+              style={styles.container}
+              data={contacts}
+              keyExtractor={(item) => item.phoneNumber}
+              renderItem={({ item }) => (
+                <Pressable onPress={() => setShowContactDetails(item)}>
+                  <ContactSummary
+                    contact={item}
+                    onPress={() => handleRemoveContact(item)}
+                  />
+                </Pressable>
+              )}
+              contentContainerStyle={styles.contentContainer}
             />
-          )}
-          contentContainerStyle={styles.contentContainer}
-        />
-      </View>
+          </View>
+        </>
+      )}
+      {showContactDetails && (
+        <>
+          <Header title={locale.contactDetails.edit} />
+          <ContactDetails contact={showContactDetails} />
+        </>
+      )}
       <View style={[styles.actionView, styles.container]}>
         <Pressable onPress={() => setCurrentScreen("AddContact")}>
-          <Icon icon={plusButton} size={30} />
+          <Icon icon={plusButton} size={24} />
         </Pressable>
       </View>
     </>

@@ -111,7 +111,7 @@ export const AddContact = ({
       </View>
       <View style={[styles.actionView, styles.container]}>
         <Pressable onPress={() => setCurrentScreen("ContactList")}>
-          <Icon icon={backButton} size={30} />
+          <Icon icon={backButton} size={24} />
         </Pressable>
       </View>
     </>
