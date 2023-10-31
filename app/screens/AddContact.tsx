@@ -7,16 +7,14 @@ import { LanguageContext } from "../providers/language/LanguageContext"
 import en from "../locales/en"
 import fr from "../locales/fr"
 import { TextInput } from "../components/TextInput/TextInput"
-import { Pressable } from "../components/Pressable/Pressable"
 import { PlainButton } from "../components/PlainButton/PlainButton"
-import { colors } from "../utils/theme/colors"
 import plus from "../../assets/plus.png"
 import { spacing } from "../utils/theme/spacing"
 import { Header } from "../components/Header/Header"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
 import { isValidEmail, isValidPhoneNumber } from "../utils/format/regex"
-import { Icon } from "../components/Icon/Icon"
 import backButton from "../../assets/backButton.png"
+import { FooterNavigation } from "../components/FooterNavigation/FooterNavigation"
 
 interface Props {
   setCurrentScreen: (currentScreen: CurrentScreen) => void
@@ -109,11 +107,11 @@ export const AddContact = ({
           </View>
         </View>
       </View>
-      <View style={[styles.actionView, styles.container]}>
-        <Pressable onPress={() => setCurrentScreen("ContactList")}>
-          <Icon icon={backButton} size={24} />
-        </Pressable>
-      </View>
+      <FooterNavigation
+        firstOnPress={() => setCurrentScreen("ContactList")}
+        firstIcon={backButton}
+        firstIconPosition="flex-start"
+      />
     </>
   )
 }
@@ -138,13 +136,5 @@ const styles = StyleSheet.create({
   },
   marginTopView: {
     marginTop: spacing.sm,
-  },
-  actionView: {
-    justifyContent: "flex-end",
-    backgroundColor: colors.palette.grey200,
-    flexDirection: "row",
-    paddingVertical: spacing.sm,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
   },
 })

@@ -10,10 +10,11 @@ import fr from "../locales/fr"
 import { LanguageContext } from "../providers/language/LanguageContext"
 import { CurrentScreen } from "../../App"
 import { connectToDatabase, removeContact } from "../db/dbService"
-import { colors } from "../utils/theme/colors"
-import { Icon } from "../components/Icon/Icon"
 import plusButton from "../../assets/plusButton.png"
 import { ContactDetails } from "../components/ContactDetails/ContactDetails"
+import { FooterNavigation } from "../components/FooterNavigation/FooterNavigation"
+import backButton from "../../assets/backButton.png"
+import trash from "../../assets/trash.png"
 
 interface Props {
   contacts: Contact[]
@@ -42,6 +43,13 @@ export const ContactList = ({
     setContacts(newContactArray)
   }
 
+  const handleRemoveContactAndGoBack = async () => {
+    if (showContactDetails) {
+      await handleRemoveContact(showContactDetails)
+    }
+    setShowContactDetails(null)
+  }
+
   return (
     <>
       {!showContactDetails && (
@@ -63,19 +71,27 @@ export const ContactList = ({
               contentContainerStyle={styles.contentContainer}
             />
           </View>
+          <FooterNavigation
+            firstIcon={plusButton}
+            firstOnPress={() => setCurrentScreen("AddContact")}
+            firstIconPosition="flex-end"
+          />
         </>
       )}
       {showContactDetails && (
         <>
           <Header title={locale.contactDetails.edit} />
           <ContactDetails contact={showContactDetails} />
+          <FooterNavigation
+            firstIcon={backButton}
+            firstOnPress={() => setShowContactDetails(null)}
+            secondIcon={trash}
+            secondOnPress={() => {
+              handleRemoveContactAndGoBack()
+            }}
+          />
         </>
       )}
-      <View style={[styles.actionView, styles.container]}>
-        <Pressable onPress={() => setCurrentScreen("AddContact")}>
-          <Icon icon={plusButton} size={24} />
-        </Pressable>
-      </View>
     </>
   )
 }
@@ -91,13 +107,5 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: spacing.sm,
-  },
-  actionView: {
-    justifyContent: "flex-end",
-    backgroundColor: colors.palette.grey200,
-    flexDirection: "row",
-    paddingVertical: spacing.sm,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
   },
 })
