@@ -81,7 +81,12 @@ export const ContactList = ({
       {showContactDetails && (
         <>
           <Header title={locale.contactDetails.edit} />
-          <ContactDetails contact={showContactDetails} />
+          <ContactDetails
+            contact={showContactDetails}
+            setShowContactDetails={setShowContactDetails}
+            contacts={contacts}
+            setContacts={setContacts}
+          />
           <FooterNavigation
             firstIcon={backButton}
             firstOnPress={() => setShowContactDetails(null)}

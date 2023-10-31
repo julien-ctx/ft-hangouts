@@ -5,17 +5,32 @@ import { LanguageContext } from "../../providers/language/LanguageContext"
 import en from "../../locales/en"
 import fr from "../../locales/fr"
 import { ContactFields } from "../ContactFields/ContactFields"
+import { connectToDatabase, updateContact } from "../../db/dbService"
 
 interface Props {
   contact: Contact
+  setShowContactDetails: (value: Contact | null) => void
+  contacts: Contact[]
+  setContacts: (contacts: Contact[]) => void
 }
 
-export const ContactDetails = ({ contact }: Props) => {
+export const ContactDetails = ({
+  contact,
+  setShowContactDetails,
+  contacts,
+  setContacts,
+}: Props) => {
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
 
-  const handleContactEdition = (contactToEdit: Contact) => {
-    console.log(contactToEdit)
+  const handleContactEdition = async (contactToEdit: Contact) => {
+    const db = await connectToDatabase()
+    await updateContact(db, contact.phoneNumber, contactToEdit)
+    const newContactList = contacts.filter(
+      (item) => item.phoneNumber !== contact.phoneNumber
+    )
+    setContacts([...newContactList, contactToEdit])
+    setShowContactDetails(null)
   }
 
   return (

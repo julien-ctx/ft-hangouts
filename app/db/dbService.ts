@@ -106,3 +106,30 @@ export const removeTables = async (db: SQLiteDatabase) => {
     throw Error(`Failed to drop tables`)
   }
 }
+
+export const updateContact = async (
+  db: SQLiteDatabase,
+  phoneNumber: string,
+  updatedContact: Contact
+) => {
+  try {
+    const updateQuery = `
+      UPDATE Contacts
+      SET firstName = ?, name = ?, phoneNumber = ?, email = ?
+      WHERE phoneNumber = ?;
+    `
+
+    const values = [
+      updatedContact.firstName,
+      updatedContact.name,
+      updatedContact.phoneNumber,
+      updatedContact.email,
+      phoneNumber,
+    ]
+
+    return db.executeSql(updateQuery, values)
+  } catch (error) {
+    console.error(error)
+    throw Error("Failed to update contact")
+  }
+}
