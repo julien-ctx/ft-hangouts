@@ -27,7 +27,7 @@ export const Header = ({ title }: Props) => {
 
   const handleColorSelection = async (newColor: string) => {
     const db = await connectToDatabase()
-    console.log(await updateColorPreference(db, newColor))
+    await updateColorPreference(db, newColor)
     setColor(newColor)
   }
 

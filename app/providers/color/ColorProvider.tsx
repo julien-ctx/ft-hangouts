@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { colors } from "../../utils/theme/colors"
 import { ColorContext } from "./ColorContext"
-import { connectToDatabase, getUserPreferences } from "../../db/dbService"
+import {
+  connectToDatabase,
+  createTables,
+  getUserPreferences,
+} from "../../db/dbService"
 
 interface Props {
   children: React.ReactNode
@@ -9,6 +13,7 @@ interface Props {
 
 const getDatabaseColor = async (): Promise<string> => {
   const db = await connectToDatabase()
+  await createTables(db)
   const databaseUserPreferences = await getUserPreferences(db)
   return databaseUserPreferences?.colorPreference ?? colors.primary
 }

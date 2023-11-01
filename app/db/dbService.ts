@@ -15,7 +15,7 @@ export const connectToDatabase = async () => {
     { name: "fthangouts.db", location: "default" },
     () => {},
     (error) => {
-      console.log(error)
+      console.error(error)
       throw Error("Could not connect to database")
     }
   )
@@ -113,7 +113,6 @@ export const getUserPreferences = async (db: SQLiteDatabase) => {
       "SELECT * FROM UserPreferences WHERE id = 1"
     )
     if (results[0]?.rows?.length) {
-      console.log(results[0].rows.item(3))
       const userPreferences = results[0].rows.item(0)
       return {
         colorPreference: userPreferences.colorPreference,
