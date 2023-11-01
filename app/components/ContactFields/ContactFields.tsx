@@ -5,7 +5,13 @@ import en from "../../locales/en"
 import fr from "../../locales/fr"
 import React from "react"
 import { TextInput } from "../TextInput/TextInput"
-import { Image, StyleSheet, View } from "react-native"
+import {
+  Image,
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native"
 import { spacing } from "../../utils/theme/spacing"
 import { PlainButton } from "../PlainButton/PlainButton"
 
@@ -31,39 +37,41 @@ export const ContactFields = ({
   const [email, setEmail] = useState(initialContact.email)
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../../../assets/user.png")}
-        style={styles.userIcon}
-      />
-      <TextInput
-        placeholder={locale.addContact.inputPlaceholders.firstName}
-        value={firstName}
-        setNewValue={setFirstName}
-      />
-      <TextInput
-        placeholder={locale.addContact.inputPlaceholders.name}
-        value={name}
-        setNewValue={setName}
-      />
-      <TextInput
-        placeholder={locale.addContact.inputPlaceholders.phoneNumber}
-        value={phoneNumber}
-        setNewValue={setPhoneNumber}
-      />
-      <TextInput
-        placeholder={locale.addContact.inputPlaceholders.email}
-        value={email}
-        setNewValue={setEmail}
-      />
-      <View style={styles.marginTopView}>
-        <PlainButton
-          onPress={() => onPress({ firstName, name, phoneNumber, email })}
-          text={buttonText}
-          icon={buttonIcon}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <Image
+          source={require("../../../assets/user.png")}
+          style={styles.userIcon}
         />
+        <TextInput
+          placeholder={locale.addContact.inputPlaceholders.firstName}
+          value={firstName}
+          setNewValue={setFirstName}
+        />
+        <TextInput
+          placeholder={locale.addContact.inputPlaceholders.name}
+          value={name}
+          setNewValue={setName}
+        />
+        <TextInput
+          placeholder={locale.addContact.inputPlaceholders.phoneNumber}
+          value={phoneNumber}
+          setNewValue={setPhoneNumber}
+        />
+        <TextInput
+          placeholder={locale.addContact.inputPlaceholders.email}
+          value={email}
+          setNewValue={setEmail}
+        />
+        <View style={styles.marginTopView}>
+          <PlainButton
+            onPress={() => onPress({ firstName, name, phoneNumber, email })}
+            text={buttonText}
+            icon={buttonIcon}
+          />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -72,6 +80,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     flexDirection: "column",
     gap: spacing.sm,
+    flex: 1,
   },
   userIcon: {
     height: 42,
