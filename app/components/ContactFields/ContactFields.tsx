@@ -8,6 +8,7 @@ import { TextInput } from "../TextInput/TextInput"
 import {
   Image,
   Keyboard,
+  ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -38,39 +39,41 @@ export const ContactFields = ({
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <Image
-          source={require("../../../assets/user.png")}
-          style={styles.userIcon}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.firstName}
-          value={firstName}
-          setNewValue={setFirstName}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.name}
-          value={name}
-          setNewValue={setName}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.phoneNumber}
-          value={phoneNumber}
-          setNewValue={setPhoneNumber}
-        />
-        <TextInput
-          placeholder={locale.addContact.inputPlaceholders.email}
-          value={email}
-          setNewValue={setEmail}
-        />
-        <View style={styles.marginTopView}>
-          <PlainButton
-            onPress={() => onPress({ firstName, name, phoneNumber, email })}
-            text={buttonText}
-            icon={buttonIcon}
+      <ScrollView>
+        <View style={styles.container}>
+          <Image
+            source={require("../../../assets/user.png")}
+            style={styles.userIcon}
           />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.firstName}
+            value={firstName}
+            setNewValue={setFirstName}
+          />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.name}
+            value={name}
+            setNewValue={setName}
+          />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.phoneNumber}
+            value={phoneNumber}
+            setNewValue={setPhoneNumber}
+          />
+          <TextInput
+            placeholder={locale.addContact.inputPlaceholders.email}
+            value={email}
+            setNewValue={setEmail}
+          />
+          <View style={styles.marginView}>
+            <PlainButton
+              onPress={() => onPress({ firstName, name, phoneNumber, email })}
+              text={buttonText}
+              icon={buttonIcon}
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   )
 }
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
   },
-  marginTopView: {
-    marginTop: spacing.sm,
+  marginView: {
+    marginVertical: spacing.sm,
   },
 })
