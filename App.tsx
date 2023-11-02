@@ -111,7 +111,15 @@ function App(): JSX.Element {
                 )}
                 {screenData.currentScreen === "MessageContact" &&
                   screenData.data && (
-                    <MessageContact contact={screenData.data} />
+                    <MessageContact
+                      contact={screenData.data}
+                      onBackPress={() =>
+                        setScreenData({
+                          currentScreen: "ContactList",
+                          data: undefined,
+                        })
+                      }
+                    />
                   )}
               </>
             )}

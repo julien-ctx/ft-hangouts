@@ -38,4 +38,7 @@ export default {
     title: "Bienvenue",
     subtitle: "Dernière connexion",
   },
+  message: {
+    placeholder: "Message texte",
+  },
 }

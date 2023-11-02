@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
   },
   summaryButtons: {
     flexDirection: "row",
-    gap: 10,
+    gap: spacing.sm,
   },
 })

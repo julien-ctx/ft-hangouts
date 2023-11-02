@@ -29,5 +29,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     borderRadius: 10,
     fontSize: 16,
+    flex: 1,
   },
 })

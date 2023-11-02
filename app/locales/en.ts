@@ -39,4 +39,7 @@ export default {
     title: "Welcome back",
     subtitle: "Last connection",
   },
+  message: {
+    placeholder: "Text message",
+  },
 }

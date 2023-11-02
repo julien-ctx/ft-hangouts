@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: 12,
+    gap: spacing.sm,
   },
   titleView: {
     flex: 1,

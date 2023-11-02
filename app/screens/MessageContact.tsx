@@ -1,15 +1,67 @@
-import React from "react"
-import { Text, View } from "react-native"
+import React, { useContext } from "react"
+import { Image, StyleSheet, Text, View } from "react-native"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
+import { Header } from "../components/Header/Header"
+import { FooterNavigation } from "../components/FooterNavigation/FooterNavigation"
+import backButton from "../../assets/backButton.png"
+import { spacing } from "../utils/theme/spacing"
+import { TextInput } from "../components/TextInput/TextInput"
+import { LanguageContext } from "../providers/language/LanguageContext"
+import en from "../locales/en"
+import fr from "../locales/fr"
 
 interface Props {
   contact: Contact
+  onBackPress: () => void
 }
 
-export const MessageContact = ({ contact }: Props) => {
+export const MessageContact = ({ contact, onBackPress }: Props) => {
+  const { language } = useContext(LanguageContext)
+  const locale = language === "en" ? en : fr
+
+  let names = `${contact.firstName} ${contact.name}`
+  if (names.length > 15) {
+    names = names.slice(0, 15) + "..."
+  }
+
   return (
-    <View>
-      <Text>{contact.firstName}</Text>
-    </View>
+    <>
+      <Header title={names} />
+      <View style={[styles.container, styles.screenContainer]}>
+        <Text>fre</Text>
+      </View>
+      <View style={[styles.container, styles.messageBox]}>
+        <TextInput placeholder={locale.message.placeholder} />
+        <Image
+          style={styles.button}
+          source={require("../../assets/send.png")}
+        />
+      </View>
+      <FooterNavigation firstIcon={backButton} firstOnPress={onBackPress} />
+    </>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: spacing.md,
+  },
+  messageBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: spacing.sm,
+    marginVertical: spacing.xs,
+  },
+  screenContainer: {
+    flex: 1,
+    height: "100%",
+    width: "100%",
+  },
+  button: {
+    height: 28,
+    width: 28,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+})
