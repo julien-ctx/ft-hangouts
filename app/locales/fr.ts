@@ -18,7 +18,7 @@ export default {
     },
     alreadyExistingContactAlert: {
       title: "Impossible d'ajouter le contact",
-      subtitle: "Il existe déjà un contact avec le meme numéro de téléphone",
+      subtitle: "Il existe déjà un contact avec le même numéro de téléphone",
     },
   },
   contactDetails: {

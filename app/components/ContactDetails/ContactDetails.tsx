@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native"
+import { Alert, StyleSheet, View } from "react-native"
 import { Contact } from "../ContactSummary/ContactSummary.typing"
 import React, { useContext } from "react"
 import { LanguageContext } from "../../providers/language/LanguageContext"
@@ -6,6 +6,7 @@ import en from "../../locales/en"
 import fr from "../../locales/fr"
 import { ContactFields } from "../ContactFields/ContactFields"
 import { connectToDatabase, updateContact } from "../../db/dbService"
+import { checkAllFields } from "../../utils/format/form"
 
 interface Props {
   contact: Contact
@@ -25,12 +26,33 @@ export const ContactDetails = ({
 
   const handleContactEdition = async (contactToEdit: Contact) => {
     const db = await connectToDatabase()
-    await updateContact(db, contact.phoneNumber, contactToEdit)
-    const newContactList = contacts.filter(
-      (item) => item.phoneNumber !== contact.phoneNumber
-    )
-    setContacts([...newContactList, contactToEdit])
-    setShowContactDetails(null)
+    if (
+      contacts.find((item) => item.phoneNumber === contactToEdit.phoneNumber)
+    ) {
+      Alert.alert(
+        locale.addContact.alreadyExistingContactAlert.title,
+        locale.addContact.alreadyExistingContactAlert.subtitle
+      )
+    } else if (
+      !checkAllFields(
+        contactToEdit.firstName,
+        contactToEdit.name,
+        contactToEdit.phoneNumber,
+        contactToEdit.email
+      )
+    ) {
+      Alert.alert(
+        locale.addContact.wrongFieldsAlert.title,
+        locale.addContact.wrongFieldsAlert.subtitle
+      )
+    } else {
+      await updateContact(db, contact.phoneNumber, contactToEdit)
+      const newContactList = contacts.filter(
+        (item) => item.phoneNumber !== contact.phoneNumber
+      )
+      setContacts([...newContactList, contactToEdit])
+      setShowContactDetails(null)
+    }
   }
 
   return (
