@@ -7,10 +7,15 @@ import { Pressable } from "../Pressable/Pressable"
 
 interface Props {
   contact: Contact
-  onPress: () => void
+  onPressSendMessage: () => void
+  onPressDelete: () => void
 }
 
-export const ContactSummary = ({ contact, onPress }: Props) => {
+export const ContactSummary = ({
+  contact,
+  onPressSendMessage,
+  onPressDelete,
+}: Props) => {
   const names = `${contact.firstName} ${contact.name}`
   return (
     <View style={styles.container}>
@@ -26,12 +31,20 @@ export const ContactSummary = ({ contact, onPress }: Props) => {
           <Text style={styles.phoneNumber}>{contact.phoneNumber}</Text>
         </View>
       </View>
-      <Pressable onPress={onPress}>
-        <Image
-          source={require("../../../assets/trash.png")}
-          style={styles.trash}
-        />
-      </Pressable>
+      <View style={styles.summaryButtons}>
+        <Pressable onPress={onPressSendMessage}>
+          <Image
+            source={require("../../../assets/send.png")}
+            style={styles.button}
+          />
+        </Pressable>
+        <Pressable onPress={onPressDelete}>
+          <Image
+            source={require("../../../assets/trash.png")}
+            style={styles.button}
+          />
+        </Pressable>
+      </View>
     </View>
   )
 }
@@ -65,9 +78,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.palette.grey600,
   },
-  trash: {
-    height: 38,
-    width: 38,
+  button: {
+    height: 28,
+    width: 28,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -78,5 +91,9 @@ const styles = StyleSheet.create({
   names: {
     fontSize: 16,
     color: colors.palette.black,
+  },
+  summaryButtons: {
+    flexDirection: "row",
+    gap: 10,
   },
 })

@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Alert, StyleSheet, View } from "react-native"
 import { addContact, connectToDatabase } from "../db/dbService"
-import { CurrentScreen } from "../../App"
+import { ScreenProps } from "../../App"
 import { LanguageContext } from "../providers/language/LanguageContext"
 import en from "../locales/en"
 import fr from "../locales/fr"
@@ -14,16 +14,12 @@ import { ContactFields } from "../components/ContactFields/ContactFields"
 import { checkAllFields } from "../utils/format/form"
 
 interface Props {
-  setCurrentScreen: (currentScreen: CurrentScreen) => void
   contacts: Contact[]
   setContacts: (contacts: Contact[]) => void
+  setScreenData: (screenData: ScreenProps) => void
 }
 
-export const AddContact = ({
-  setCurrentScreen,
-  contacts,
-  setContacts,
-}: Props) => {
+export const AddContact = ({ setScreenData, contacts, setContacts }: Props) => {
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
 
@@ -44,7 +40,7 @@ export const AddContact = ({
         const db = await connectToDatabase()
         addContact(db, contact)
         setContacts([...contacts, contact])
-        setCurrentScreen("ContactList")
+        setScreenData({ currentScreen: "ContactList" })
       } else {
         Alert.alert(
           locale.addContact.wrongFieldsAlert.title,
@@ -65,7 +61,7 @@ export const AddContact = ({
         />
       </View>
       <FooterNavigation
-        firstOnPress={() => setCurrentScreen("ContactList")}
+        firstOnPress={() => setScreenData({ currentScreen: "ContactList" })}
         firstIcon={backButton}
         firstIconPosition="flex-start"
       />

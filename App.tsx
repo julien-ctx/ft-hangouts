@@ -15,12 +15,19 @@ import { ColorProvider } from "./app/providers/color/ColorProvider"
 import { formatDateString } from "./app/utils/format/date"
 import { LastUsage } from "./app/screens/LastUsage"
 import { colors } from "./app/utils/theme/colors"
+import { MessageContact } from "./app/screens/MessageContact"
 
-export type CurrentScreen = "ContactList" | "AddContact"
+type CurrentScreen = "ContactList" | "AddContact" | "MessageContact"
+
+export interface ScreenProps {
+  currentScreen: CurrentScreen
+  data?: Contact | undefined
+}
 
 function App(): JSX.Element {
-  const [currentScreen, setCurrentScreen] =
-    useState<CurrentScreen>("ContactList")
+  const [screenData, setScreenData] = useState<ScreenProps>({
+    currentScreen: "ContactList",
+  })
   const [contacts, setContacts] = useState<Contact[]>([])
 
   const [lastUsageDate, setLastUsageDate] = useState<string>("")
@@ -88,20 +95,24 @@ function App(): JSX.Element {
           <View style={styles.screenContainer}>
             {!lastUsageDate && (
               <>
-                {currentScreen === "ContactList" && (
+                {screenData.currentScreen === "ContactList" && (
                   <ContactList
                     contacts={contacts}
                     setContacts={setContacts}
-                    setCurrentScreen={setCurrentScreen}
+                    setScreenData={setScreenData}
                   />
                 )}
-                {currentScreen === "AddContact" && (
+                {screenData.currentScreen === "AddContact" && (
                   <AddContact
-                    setCurrentScreen={setCurrentScreen}
                     contacts={contacts}
                     setContacts={setContacts}
+                    setScreenData={setScreenData}
                   />
                 )}
+                {screenData.currentScreen === "MessageContact" &&
+                  screenData.data && (
+                    <MessageContact contact={screenData.data} />
+                  )}
               </>
             )}
             {lastUsageDate && <LastUsage date={lastUsageDate} />}

@@ -8,7 +8,7 @@ import { Pressable } from "../components/Pressable/Pressable"
 import en from "../locales/en"
 import fr from "../locales/fr"
 import { LanguageContext } from "../providers/language/LanguageContext"
-import { CurrentScreen } from "../../App"
+import { ScreenProps } from "../../App"
 import { connectToDatabase, removeContact } from "../db/dbService"
 import plusButton from "../../assets/plusButton.png"
 import { ContactDetails } from "../components/ContactDetails/ContactDetails"
@@ -20,13 +20,13 @@ import { colors } from "../utils/theme/colors"
 interface Props {
   contacts: Contact[]
   setContacts: (contacts: Contact[]) => void
-  setCurrentScreen: (currentScreen: CurrentScreen) => void
+  setScreenData: (screenData: ScreenProps) => void
 }
 
 export const ContactList = ({
   contacts,
   setContacts,
-  setCurrentScreen,
+  setScreenData,
 }: Props) => {
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
@@ -67,6 +67,10 @@ export const ContactList = ({
     }
   }
 
+  const handleSendMessage = (item: Contact) => {
+    setScreenData({ currentScreen: "MessageContact", data: item })
+  }
+
   return (
     <>
       {!showContactDetails && (
@@ -82,7 +86,8 @@ export const ContactList = ({
                   <Pressable onPress={() => setShowContactDetails(item)}>
                     <ContactSummary
                       contact={item}
-                      onPress={() => handleRemoveContact(item, false)}
+                      onPressDelete={() => handleRemoveContact(item, false)}
+                      onPressSendMessage={() => handleSendMessage(item)}
                     />
                   </Pressable>
                 )}
@@ -96,7 +101,7 @@ export const ContactList = ({
           </View>
           <FooterNavigation
             firstIcon={plusButton}
-            firstOnPress={() => setCurrentScreen("AddContact")}
+            firstOnPress={() => setScreenData({ currentScreen: "AddContact" })}
             firstIconPosition="flex-end"
           />
         </>
