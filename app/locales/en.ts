@@ -35,4 +35,8 @@ export default {
     cancel: "No",
   },
   emptyContactListMessage: "You don't have any contact",
+  lastUsage: {
+    title: "Welcome back",
+    subtitle: "Last connection",
+  },
 }

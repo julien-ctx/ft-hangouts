@@ -10,8 +10,7 @@ import { Pressable } from "../Pressable/Pressable"
 import { ColorContext } from "../../providers/color/ColorContext"
 import {
   connectToDatabase,
-  updateColorPreference,
-  updateLanguagePreference,
+  updateSingleUserPreference,
 } from "../../db/dbService"
 import { Language } from "../../providers/language/Language.typing"
 
@@ -27,13 +26,13 @@ export const Header = ({ title }: Props) => {
 
   const handleColorSelection = async (newColor: string) => {
     const db = await connectToDatabase()
-    await updateColorPreference(db, newColor)
+    await updateSingleUserPreference(db, "colorPreference", newColor)
     setColor(newColor)
   }
 
   const handleLanguageChange = async (newLanguage: Language) => {
     const db = await connectToDatabase()
-    await updateLanguagePreference(db, newLanguage)
+    await updateSingleUserPreference(db, "languagePreference", newLanguage)
     setLanguage(newLanguage)
   }
 

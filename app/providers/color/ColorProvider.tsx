@@ -4,7 +4,7 @@ import { ColorContext } from "./ColorContext"
 import {
   connectToDatabase,
   createTables,
-  getUserPreferences,
+  getSingleUserPreference,
 } from "../../db/dbService"
 
 interface Props {
@@ -14,8 +14,8 @@ interface Props {
 const getDatabaseColor = async (): Promise<string> => {
   const db = await connectToDatabase()
   await createTables(db)
-  const databaseUserPreferences = await getUserPreferences(db)
-  return databaseUserPreferences?.colorPreference ?? colors.primary
+  const colorPreference = await getSingleUserPreference(db, "colorPreference")
+  return colorPreference ?? colors.primary
 }
 
 export const ColorProvider = ({ children }: Props) => {

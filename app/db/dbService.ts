@@ -4,7 +4,6 @@ import {
   SQLiteDatabase,
 } from "react-native-sqlite-storage"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
-import { Language } from "../providers/language/Language.typing"
 
 enablePromise(true)
 
@@ -27,6 +26,7 @@ export const createTables = async (db: SQLiteDatabase) => {
         id INTEGER DEFAULT 1,
         colorPreference TEXT,
         languagePreference TEXT,
+        lastUsageDate TEXT,
         PRIMARY KEY(id)
     )
   `
@@ -107,23 +107,22 @@ export const getContacts = async (db: SQLiteDatabase): Promise<Contact[]> => {
   }
 }
 
-export const getUserPreferences = async (db: SQLiteDatabase) => {
+export const getSingleUserPreference = async (
+  db: SQLiteDatabase,
+  userPreference: string
+): Promise<string | null> => {
   try {
     const results = await db.executeSql(
-      "SELECT * FROM UserPreferences WHERE id = 1"
+      `SELECT ${userPreference} FROM UserPreferences WHERE id = 1`
     )
     if (results[0]?.rows?.length) {
-      const userPreferences = results[0].rows.item(0)
-      return {
-        colorPreference: userPreferences.colorPreference,
-        languagePreference: userPreferences.languagePreference,
-      }
+      return results[0].rows.item(0)[userPreference]
     } else {
       return null
     }
   } catch (error) {
     console.error(error)
-    throw Error("Failed to get UserPreferences from database")
+    throw Error(`Failed to get ${userPreference} from database`)
   }
 }
 
@@ -187,36 +186,20 @@ export const updateContact = async (
   }
 }
 
-export const updateColorPreference = async (
+export const updateSingleUserPreference = async (
   db: SQLiteDatabase,
-  newColorPreference: string
+  userPreference: string,
+  newValue: string
 ) => {
   const query = `
-      INSERT INTO UserPreferences (id, colorPreference)
+      INSERT INTO UserPreferences (id, ${userPreference})
       VALUES (1, ?)
-      ON CONFLICT(id) DO UPDATE SET colorPreference = ?
+      ON CONFLICT(id) DO UPDATE SET ${userPreference} = ?
   `
   try {
-    return db.executeSql(query, [newColorPreference, newColorPreference])
+    return db.executeSql(query, [newValue, newValue])
   } catch (error) {
     console.error(error)
-    throw Error("Failed to update color preference")
-  }
-}
-
-export const updateLanguagePreference = async (
-  db: SQLiteDatabase,
-  newLanguagePreference: Language
-) => {
-  const query = `
-      INSERT INTO UserPreferences (id, languagePreference)
-      VALUES (1, ?)
-      ON CONFLICT(id) DO UPDATE SET languagePreference = ?
-  `
-  try {
-    return db.executeSql(query, [newLanguagePreference, newLanguagePreference])
-  } catch (error) {
-    console.error(error)
-    throw Error("Failed to update language preference")
+    throw Error(`Failed to update ${userPreference}`)
   }
 }

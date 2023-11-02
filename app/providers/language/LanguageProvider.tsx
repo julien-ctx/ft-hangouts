@@ -4,7 +4,7 @@ import { Language } from "./Language.typing"
 import {
   connectToDatabase,
   createTables,
-  getUserPreferences,
+  getSingleUserPreference,
 } from "../../db/dbService"
 import { NativeModules, Platform } from "react-native"
 
@@ -12,7 +12,7 @@ interface Props {
   children: React.ReactNode
 }
 
-const getDatabaseLanguage = async (): Promise<Language> => {
+const getDatabaseLanguage = async (): Promise<string> => {
   const frenchIdentifierList = [
     "fr_FR",
     "fr_CA",
@@ -24,9 +24,12 @@ const getDatabaseLanguage = async (): Promise<Language> => {
   ]
   const db = await connectToDatabase()
   await createTables(db)
-  const databaseUserPreferences = await getUserPreferences(db)
-  if (databaseUserPreferences?.languagePreference) {
-    return databaseUserPreferences.languagePreference
+  const languagePreference = await getSingleUserPreference(
+    db,
+    "languagePreference"
+  )
+  if (languagePreference) {
+    return languagePreference
   } else {
     const locale =
       Platform.OS === "ios"
@@ -46,7 +49,7 @@ export const LanguageProvider = ({ children }: Props) => {
   useEffect(() => {
     const fetchLanguage = async () => {
       const fetchedLanguage = await getDatabaseLanguage()
-      setLanguage(fetchedLanguage)
+      setLanguage(fetchedLanguage as Language)
     }
 
     fetchLanguage()
