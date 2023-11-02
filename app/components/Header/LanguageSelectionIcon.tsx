@@ -35,13 +35,13 @@ export const LanguageSelectionIcon = ({
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    height: 22,
-    width: 22,
+    height: 34,
+    width: 34,
     borderRadius: 11,
   },
   highlightIcon: {
     borderWidth: 1,
     borderColor: "white",
-    borderRadius: 11,
+    borderRadius: 17,
   },
 })

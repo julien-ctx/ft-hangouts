@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.palette.white,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 20,
   },
   imageView: {
     height: 10,

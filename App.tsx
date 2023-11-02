@@ -14,6 +14,7 @@ import { AddContact } from "./app/screens/AddContact"
 import { ColorProvider } from "./app/providers/color/ColorProvider"
 import { formatDateString } from "./app/utils/format/date"
 import { LastUsage } from "./app/screens/LastUsage"
+import { colors } from "./app/utils/theme/colors"
 
 export type CurrentScreen = "ContactList" | "AddContact"
 
@@ -45,13 +46,11 @@ function App(): JSX.Element {
       "change",
       async (nextAppState) => {
         const db = await connectToDatabase()
-        console.log(nextAppState)
         if (nextAppState === "background") {
           const stringDate = formatDateString(new Date())
           await updateSingleUserPreference(db, "lastUsageDate", stringDate)
           setLastUsageDate(stringDate)
         } else if (nextAppState === "active") {
-          console.log("test")
           const timer = setTimeout(() => {
             setLastUsageDate("")
           }, 2000)
@@ -83,7 +82,7 @@ function App(): JSX.Element {
   }, [loadDataCallback])
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.appBackground}>
       <LanguageProvider>
         <ColorProvider>
           <View style={styles.screenContainer}>
@@ -117,6 +116,9 @@ const styles = StyleSheet.create({
   screenContainer: {
     height: "100%",
     width: "100%",
+  },
+  appBackground: {
+    backgroundColor: colors.palette.white,
   },
 })
 

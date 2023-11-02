@@ -28,29 +28,29 @@ export const AddContact = ({
   const locale = language === "en" ? en : fr
 
   const handleAddContact = async (contact: Contact) => {
-    const areFieldsCorrect = checkAllFields(
-      contact.firstName,
-      contact.name,
-      contact.phoneNumber,
-      contact.email
-    )
-    if (areFieldsCorrect) {
-      const db = await connectToDatabase()
-      addContact(db, contact)
-      setContacts([...contacts, contact])
-      setCurrentScreen("ContactList")
-    } else if (
-      contacts.find((item) => item.phoneNumber === contact.phoneNumber)
-    ) {
+    if (contacts.find((item) => item.phoneNumber === contact.phoneNumber)) {
       Alert.alert(
         locale.addContact.alreadyExistingContactAlert.title,
         locale.addContact.alreadyExistingContactAlert.subtitle
       )
     } else {
-      Alert.alert(
-        locale.addContact.wrongFieldsAlert.title,
-        locale.addContact.wrongFieldsAlert.subtitle
+      const areFieldsCorrect = checkAllFields(
+        contact.firstName,
+        contact.name,
+        contact.phoneNumber,
+        contact.email
       )
+      if (areFieldsCorrect) {
+        const db = await connectToDatabase()
+        addContact(db, contact)
+        setContacts([...contacts, contact])
+        setCurrentScreen("ContactList")
+      } else {
+        Alert.alert(
+          locale.addContact.wrongFieldsAlert.title,
+          locale.addContact.wrongFieldsAlert.subtitle
+        )
+      }
     }
   }
 

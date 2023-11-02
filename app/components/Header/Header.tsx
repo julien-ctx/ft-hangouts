@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.palette.white,
   },
   title: {
-    fontSize: 16,
+    fontSize: 20,
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: 8,
+    gap: 12,
   },
   titleView: {
     flex: 1,
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonContainer: {
-    height: 22,
-    width: 22,
+    height: 34,
+    width: 34,
   },
   colorSelectionView: {
     justifyContent: "space-between",

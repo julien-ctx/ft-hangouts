@@ -15,6 +15,7 @@ import { ContactDetails } from "../components/ContactDetails/ContactDetails"
 import { FooterNavigation } from "../components/FooterNavigation/FooterNavigation"
 import backButton from "../../assets/backButton.png"
 import trash from "../../assets/trash.png"
+import { colors } from "../utils/theme/colors"
 
 interface Props {
   contacts: Contact[]
@@ -44,6 +45,10 @@ export const ContactList = ({
         locale.confirmationAlert.subtitle,
         [
           {
+            text: locale.confirmationAlert.cancel,
+            style: "cancel",
+          },
+          {
             text: locale.confirmationAlert.confirm,
             onPress: async () => {
               const db = await connectToDatabase()
@@ -56,10 +61,6 @@ export const ContactList = ({
                 setShowContactDetails(null)
               }
             },
-          },
-          {
-            text: locale.confirmationAlert.cancel,
-            style: "cancel",
           },
         ]
       )
@@ -137,5 +138,7 @@ const styles = StyleSheet.create({
   },
   emptyContactListMessage: {
     textAlign: "center",
+    fontSize: 16,
+    color: colors.palette.black,
   },
 })

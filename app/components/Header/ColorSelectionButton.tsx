@@ -27,13 +27,13 @@ export const ColorSelectionButton = ({
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    height: 22,
-    width: 22,
-    borderRadius: 11,
+    height: 34,
+    width: 34,
+    borderRadius: 17,
   },
   highlightIcon: {
     borderWidth: 1,
     borderColor: "white",
-    borderRadius: 11,
+    borderRadius: 17,
   },
 })

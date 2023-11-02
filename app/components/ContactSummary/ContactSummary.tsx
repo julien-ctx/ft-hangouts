@@ -11,15 +11,17 @@ interface Props {
 }
 
 export const ContactSummary = ({ contact, onPress }: Props) => {
+  const names = `${contact.firstName} ${contact.name}`
   return (
     <View style={styles.container}>
       <View style={styles.contactView}>
         <View style={styles.iconButton}>
-          <Text>{contact.firstName[0].toUpperCase()}</Text>
+          <Text style={styles.names}>{contact.firstName[0].toUpperCase()}</Text>
         </View>
         <View style={styles.information}>
-          <Text>
-            {contact.firstName} {contact.name}
+          <Text style={styles.names}>
+            {names.slice(0, 18)}
+            {names.length > 18 && "..."}
           </Text>
           <Text style={styles.phoneNumber}>{contact.phoneNumber}</Text>
         </View>
@@ -37,8 +39,8 @@ export const ContactSummary = ({ contact, onPress }: Props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.palette.grey200,
-    paddingHorizontal: spacing.m,
-    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
@@ -46,11 +48,11 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     backgroundColor: colors.palette.grey400,
-    height: 32,
-    width: 32,
+    height: 38,
+    width: 38,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 16,
+    borderRadius: 19,
     marginRight: 10,
   },
   information: {
@@ -60,17 +62,21 @@ const styles = StyleSheet.create({
   },
   phoneNumber: {
     fontStyle: "italic",
-    fontSize: 10,
+    fontSize: 14,
     color: colors.palette.grey600,
   },
   trash: {
-    height: 24,
-    width: 24,
+    height: 38,
+    width: 38,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 16,
   },
   contactView: {
     flexDirection: "row",
+    alignItems: "center",
+  },
+  names: {
+    fontSize: 16,
+    color: colors.palette.black,
   },
 })

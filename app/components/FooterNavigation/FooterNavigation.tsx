@@ -25,10 +25,10 @@ export const FooterNavigation = ({
       {secondIcon && secondOnPress && (
         <View style={[styles.actionView, styles.severalIconStyle]}>
           <Pressable onPress={firstOnPress}>
-            <Icon icon={firstIcon} size={24} />
+            <Icon icon={firstIcon} size={38} />
           </Pressable>
           <Pressable onPress={secondOnPress}>
-            <Icon icon={secondIcon} size={24} />
+            <Icon icon={secondIcon} size={38} />
           </Pressable>
         </View>
       )}
@@ -37,7 +37,7 @@ export const FooterNavigation = ({
           style={[styles.actionView, { justifyContent: firstIconPosition }]}
         >
           <Pressable onPress={firstOnPress}>
-            <Icon icon={firstIcon} size={24} />
+            <Icon icon={firstIcon} size={38} />
           </Pressable>
         </View>
       )}
