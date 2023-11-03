@@ -53,6 +53,38 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
         message:
           "dewopfurefireoufgjrtiohgfiderohfrouefhirjfhouehfuerhfiurfheriuhfreuifhreuffheruhrefiuerhfiurehuier",
       },
+      { isReceived: false, message: "Salut c'est moi" },
+      {
+        isReceived: true,
+        message:
+          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
+      },
+      {
+        isReceived: false,
+        message:
+          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
+      },
+      {
+        isReceived: true,
+        message:
+          "dewopfurefireoufgjrtiohgfiderohfrouefhirjfhouehfuerhfiurfheriuhfreuifhreuffheruhrefiuerhfiurehuier",
+      },
+      { isReceived: false, message: "Salut c'est moi" },
+      {
+        isReceived: true,
+        message:
+          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
+      },
+      {
+        isReceived: false,
+        message:
+          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
+      },
+      {
+        isReceived: true,
+        message:
+          "dewopfurefireoufgjrtiohgfiderohfrouefhirjfhouehfuerhfiurfheriuhfreuifhreuffheruhrefiuerhfiurehuier",
+      },
     ])
   }, [])
 
@@ -102,7 +134,9 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
       keyboardVerticalOffset={Platform.OS === "ios" ? spacing.md : 0}
     >
       <Header title={names} />
-      <View style={[styles.container, styles.screenContainer]}>
+      <View
+        style={[styles.container, styles.screenContainer, styles.allMessages]}
+      >
         <FlatList
           data={allMessages}
           renderItem={({ item }) => <SingleMessage message={item} />}
@@ -157,5 +191,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: spacing.sm,
+  },
+  allMessages: {
+    marginVertical: spacing.sm,
   },
 })
