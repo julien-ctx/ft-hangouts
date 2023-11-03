@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import {
   Alert,
+  FlatList,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +20,8 @@ import en from "../locales/en"
 import fr from "../locales/fr"
 import { PERMISSIONS, request } from "react-native-permissions"
 import SmsAndroid from "react-native-get-sms-android"
+import { Message } from "../components/SingleMessage/SingleMessage.typing"
+import { SingleMessage } from "../components/SingleMessage/SingleMessage"
 
 interface Props {
   contact: Contact
@@ -30,6 +33,28 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
   const locale = language === "en" ? en : fr
 
   const [message, setMessage] = useState<string>("")
+  const [allMessages, setAllMessages] = useState<Message[]>([])
+
+  useEffect(() => {
+    setAllMessages([
+      { isReceived: false, message: "Salut c'est moi" },
+      {
+        isReceived: true,
+        message:
+          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
+      },
+      {
+        isReceived: false,
+        message:
+          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
+      },
+      {
+        isReceived: true,
+        message:
+          "dewopfurefireoufgjrtiohgfiderohfrouefhirjfhouehfuerhfiurfheriuhfreuifhreuffheruhrefiuerhfiurehuier",
+      },
+    ])
+  }, [])
 
   let names = `${contact.firstName} ${contact.name}`
   if (names.length > 15) {
@@ -77,7 +102,14 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
       keyboardVerticalOffset={Platform.OS === "ios" ? spacing.md : 0}
     >
       <Header title={names} />
-      <View style={[styles.container, styles.screenContainer]} />
+      <View style={[styles.container, styles.screenContainer]}>
+        <FlatList
+          data={allMessages}
+          renderItem={({ item }) => <SingleMessage message={item} />}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
       <View style={[styles.container, styles.messageBox]}>
         <TextInput
           placeholder={locale.message.placeholder}
@@ -122,5 +154,8 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
+  },
+  contentContainer: {
+    gap: spacing.sm,
   },
 })
