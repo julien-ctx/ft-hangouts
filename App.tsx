@@ -3,6 +3,7 @@ import { AppState, SafeAreaView, StyleSheet, View } from "react-native"
 import { LanguageProvider } from "./app/providers/language/LanguageProvider"
 import { ContactList } from "./app/screens/ContactList"
 import {
+  addMessage,
   connectToDatabase,
   createTables,
   getContacts,
@@ -17,6 +18,7 @@ import { LastUsage } from "./app/screens/LastUsage"
 import { colors } from "./app/utils/theme/colors"
 import { MessageContact } from "./app/screens/MessageContact"
 import { PERMISSIONS, request } from "react-native-permissions"
+import SmsListener from "react-native-android-sms-listener"
 
 type CurrentScreen = "ContactList" | "AddContact" | "MessageContact"
 
@@ -94,6 +96,20 @@ function App(): JSX.Element {
   useEffect(() => {
     loadDataCallback()
     askForPermissions()
+    const subscription = SmsListener.addListener(
+      async (incomingMessage: any) => {
+        if (incomingMessage.originatingAddress) {
+          const newMessage = {
+            content: incomingMessage.body,
+            isReceived: true,
+            timestamp: incomingMessage.timestamp,
+          }
+          const db = await connectToDatabase()
+          await addMessage(db, incomingMessage.originatingAddress, newMessage)
+        }
+      }
+    )
+    return () => subscription?.remove()
   }, [loadDataCallback])
 
   return (
