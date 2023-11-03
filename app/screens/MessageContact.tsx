@@ -1,5 +1,5 @@
-import React, { useContext } from "react"
-import { Image, Pressable, StyleSheet, Text, View } from "react-native"
+import React, { useContext, useState } from "react"
+import { Image, Pressable, StyleSheet, View } from "react-native"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
 import { Header } from "../components/Header/Header"
 import { FooterNavigation } from "../components/FooterNavigation/FooterNavigation"
@@ -21,18 +21,19 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
 
+  const [message, setMessage] = useState<string>("")
+
   let names = `${contact.firstName} ${contact.name}`
   if (names.length > 15) {
     names = names.slice(0, 15) + "..."
   }
 
   const handleSendMessage = async () => {
-    console.log(PERMISSIONS.ANDROID.SEND_SMS)
     const status = await request(PERMISSIONS.ANDROID.SEND_SMS)
     if (status === "granted") {
       SmsAndroid.autoSend(
-        "+33652744249",
-        "Test ft_hangout",
+        contact.phoneNumber,
+        message,
         (fail: string) => {
           console.log("Failed with this error: " + fail)
         },
@@ -48,17 +49,20 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
   return (
     <>
       <Header title={names} />
-      <View style={[styles.container, styles.screenContainer]}>
-        <Pressable onPress={handleSendMessage}>
-          <Text>SEND MESSAGE</Text>
-        </Pressable>
-      </View>
+      <View style={[styles.container, styles.screenContainer]} />
       <View style={[styles.container, styles.messageBox]}>
-        <TextInput placeholder={locale.message.placeholder} />
-        <Image
-          style={styles.button}
-          source={require("../../assets/send.png")}
+        <TextInput
+          placeholder={locale.message.placeholder}
+          value={message}
+          setNewValue={setMessage}
+          multiline
         />
+        <Pressable onPress={handleSendMessage}>
+          <Image
+            style={styles.button}
+            source={require("../../assets/send.png")}
+          />
+        </Pressable>
       </View>
       <FooterNavigation firstIcon={backButton} firstOnPress={onBackPress} />
     </>
