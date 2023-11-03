@@ -4,6 +4,7 @@ import {
   FlatList,
   Image,
   KeyboardAvoidingView,
+  PermissionsAndroid,
   Platform,
   Pressable,
   StyleSheet,
@@ -23,6 +24,7 @@ import SmsAndroid from "react-native-get-sms-android"
 import { Message } from "../components/SingleMessage/SingleMessage.typing"
 import { SingleMessage } from "../components/SingleMessage/SingleMessage"
 import { addMessage, connectToDatabase, getDiscussion } from "../db/dbService"
+import SmsListener from "react-native-android-sms-listener"
 
 interface Props {
   contact: Contact
@@ -48,6 +50,35 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
   useEffect(() => {
     loadDataCallback()
   }, [loadDataCallback])
+  console.log(allMessages.length)
+
+  useEffect(() => {
+    let subscription: any = null
+    console.log("test")
+    const setListener = async () => {
+      console.log("registered")
+      subscription = SmsListener.addListener(async (incomingMessage: any) => {
+        if (incomingMessage.originatingAddress === contact.phoneNumber) {
+          const newMessage = {
+            content: incomingMessage.body,
+            isReceived: true,
+            timestamp: incomingMessage.timestamp,
+          }
+          const newMessageArray = [...allMessages, newMessage]
+          setAllMessages(newMessageArray)
+          const db = await connectToDatabase()
+          await addMessage(db, contact.phoneNumber, newMessage)
+        }
+      })
+    }
+    setListener()
+    return () => {
+      if (subscription) {
+        console.log("testc")
+        subscription.remove()
+      }
+    }
+  }, [allMessages, contact.phoneNumber])
 
   let names = `${contact.firstName} ${contact.name}`
   if (names.length > 15) {
@@ -57,7 +88,7 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
   const handleSendMessage = async () => {
     if (message.length) {
       const status = await request(PERMISSIONS.ANDROID.SEND_SMS)
-      if (status === "granted") {
+      if (status === PermissionsAndroid.RESULTS.GRANTED) {
         SmsAndroid.autoSend(
           contact.phoneNumber,
           message,
@@ -72,6 +103,7 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
             const newMessage = {
               content: message,
               isReceived: false,
+              timestamp: Date.now(),
             }
             setMessage("")
             const newMessageArray = [...allMessages, newMessage]

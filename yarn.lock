@@ -5639,6 +5639,11 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-android-sms-listener@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-android-sms-listener/-/react-native-android-sms-listener-0.8.0.tgz#3e69a642b32f8cbec1f28b2b477677b07e6ce89e"
+  integrity sha512-jRAsSjQFeJKTF5ljo67UMzpUUo4P3Doq2n/uyCrBg7MowXyIMY5ALwIzs72w6oalnXUnq9izvYXeU40vLFLz6Q==
+
 "react-native-get-sms-android@git+https://github.com/julien-ctx/react-native-get-sms-android.git":
   version "2.1.0"
   resolved "git+https://github.com/julien-ctx/react-native-get-sms-android.git#a4e956e4a874691777a8b7ee09d22b33b4465618"
@@ -5647,6 +5652,11 @@ react-native-permissions@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.10.1.tgz#cb0171c8d12113869deaabbdfb979aad1a44752b"
   integrity sha512-Gc5BxxpjZn4QNUDiVeHOO0vXh3AH7ToolmwTJozqC6DsxV7NAf3ttap+8BSmzDR8WxuAM3Cror+YNiBhHJx7/w==
+
+react-native-sms-retriever@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-sms-retriever/-/react-native-sms-retriever-1.1.1.tgz#e87225836b394560c63db4c106552a0b9247d9b3"
+  integrity sha512-WRwiITfssx59+TB1iEMmjB7w4OTkatR34js5+4a4pP2jMXJ4aLdXK0hOtHxl8ciS8aIejdd49Sz8AXonlvtdRw==
 
 react-native-sms@^1.11.0:
   version "1.11.0"

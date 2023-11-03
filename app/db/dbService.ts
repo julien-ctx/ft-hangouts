@@ -45,6 +45,7 @@ export const createTables = async (db: SQLiteDatabase) => {
       phoneNumber TEXT,
       content TEXT,
       isReceived BOOLEAN,
+      timestamp INTEGER,
       FOREIGN KEY(phoneNumber) REFERENCES Contacts(phoneNumber)
     )
   `
@@ -142,7 +143,7 @@ export const getDiscussion = async (
   phoneNumber: string
 ): Promise<Message[]> => {
   const query = `
-    SELECT content, isReceived
+    SELECT content, isReceived, timestamp
     FROM Messages
     WHERE phoneNumber = ?
     ORDER BY id ASC
@@ -189,14 +190,15 @@ export const addMessage = async (
   message: Message
 ) => {
   const query = `
-    INSERT INTO Messages (phoneNumber, content, isReceived)
-    VALUES (?, ?, ?)
+    INSERT INTO Messages (phoneNumber, content, isReceived, timestamp)
+    VALUES (?, ?, ?, ?)
   `
   try {
     await db.executeSql(query, [
       phoneNumber,
       message.content,
       message.isReceived ? 1 : 0,
+      message.timestamp,
     ])
   } catch (error) {
     console.error(error)

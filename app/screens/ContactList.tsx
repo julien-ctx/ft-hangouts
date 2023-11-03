@@ -1,7 +1,14 @@
 import React, { useContext, useState } from "react"
 import { Header } from "../components/Header/Header"
 import { ContactSummary } from "../components/ContactSummary/ContactSummary"
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native"
+import {
+  Alert,
+  FlatList,
+  PermissionsAndroid,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native"
 import { spacing } from "../utils/theme/spacing"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
 import { Pressable } from "../components/Pressable/Pressable"
@@ -16,6 +23,7 @@ import { FooterNavigation } from "../components/FooterNavigation/FooterNavigatio
 import backButton from "../../assets/backButton.png"
 import trash from "../../assets/trash.png"
 import { colors } from "../utils/theme/colors"
+import { PERMISSIONS, check } from "react-native-permissions"
 
 interface Props {
   contacts: Contact[]
@@ -67,8 +75,22 @@ export const ContactList = ({
     }
   }
 
-  const handleSendMessage = (item: Contact) => {
-    setScreenData({ currentScreen: "MessageContact", data: item })
+  const handleSendMessage = async (item: Contact) => {
+    let sendSMSStatus = await check(PERMISSIONS.ANDROID.SEND_SMS)
+    let readSMSStatus = await check(PERMISSIONS.ANDROID.READ_SMS)
+    let receiveSMSStatus = await check(PERMISSIONS.ANDROID.RECEIVE_SMS)
+    if (
+      sendSMSStatus === PermissionsAndroid.RESULTS.GRANTED &&
+      readSMSStatus === PermissionsAndroid.RESULTS.GRANTED &&
+      receiveSMSStatus === PermissionsAndroid.RESULTS.GRANTED
+    ) {
+      setScreenData({ currentScreen: "MessageContact", data: item })
+    } else {
+      Alert.alert(
+        locale.message.permissionDenied.title,
+        locale.message.permissionDenied.subtitle
+      )
+    }
   }
 
   return (

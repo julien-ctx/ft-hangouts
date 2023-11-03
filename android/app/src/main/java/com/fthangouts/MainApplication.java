@@ -8,9 +8,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
-import java.util.Arrays;  // Import Arrays class
+import java.util.Arrays;
 import java.util.List;
 import com.react.SmsPackage;
+import com.centaurwarchief.smslistener.SmsListenerPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -25,8 +26,6 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Add additional packages if needed
-          // packages.add(new SomeOtherPackage());
           return packages;
         }
 

@@ -16,6 +16,7 @@ import { formatDateString } from "./app/utils/format/date"
 import { LastUsage } from "./app/screens/LastUsage"
 import { colors } from "./app/utils/theme/colors"
 import { MessageContact } from "./app/screens/MessageContact"
+import { PERMISSIONS, request } from "react-native-permissions"
 
 type CurrentScreen = "ContactList" | "AddContact" | "MessageContact"
 
@@ -84,8 +85,15 @@ function App(): JSX.Element {
     }
   }, [])
 
+  const askForPermissions = async () => {
+    await request(PERMISSIONS.ANDROID.READ_SMS)
+    await request(PERMISSIONS.ANDROID.RECEIVE_SMS)
+    await request(PERMISSIONS.ANDROID.SEND_SMS)
+  }
+
   useEffect(() => {
     loadDataCallback()
+    askForPermissions()
   }, [loadDataCallback])
 
   return (
