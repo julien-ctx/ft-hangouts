@@ -24,6 +24,7 @@ export const TextInput = ({
       value={value}
       onChangeText={(newValue) => setNewValue(newValue)}
       placeholder={placeholder}
+      placeholderTextColor={colors.palette.grey400}
       multiline={multiline}
       maxLength={maxLength}
     />
@@ -40,5 +41,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 16,
     flex: 1,
+    color: colors.palette.black,
   },
 })

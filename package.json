@@ -17,8 +17,6 @@
     "react-native-android-sms-listener": "^0.8.0",
     "react-native-get-sms-android": "git+https://github.com/julien-ctx/react-native-get-sms-android.git",
     "react-native-permissions": "^3.10.1",
-    "react-native-sms": "^1.11.0",
-    "react-native-sms-retriever": "^1.1.1",
     "react-native-sqlite-storage": "^6.0.1"
   },
   "devDependencies": {
