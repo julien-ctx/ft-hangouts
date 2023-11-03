@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native"
+import { Image, Platform, StyleSheet, Text, View } from "react-native"
 import { colors } from "../../utils/theme/colors"
 import { Contact } from "./ContactSummary.typing"
 import React from "react"
@@ -32,12 +32,14 @@ export const ContactSummary = ({
         </View>
       </View>
       <View style={styles.summaryButtons}>
-        <Pressable onPress={onPressSendMessage}>
-          <Image
-            source={require("../../../assets/send.png")}
-            style={styles.button}
-          />
-        </Pressable>
+        {Platform.OS === "android" && (
+          <Pressable onPress={onPressSendMessage}>
+            <Image
+              source={require("../../../assets/send.png")}
+              style={styles.button}
+            />
+          </Pressable>
+        )}
         <Pressable onPress={onPressDelete}>
           <Image
             source={require("../../../assets/trash.png")}

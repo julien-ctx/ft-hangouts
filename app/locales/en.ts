@@ -41,5 +41,17 @@ export default {
   },
   message: {
     placeholder: "Text message",
+    permissionDenied: {
+      title: "Not enough permission",
+      subtitle: "Try again and accept permissions request",
+    },
+    error: {
+      title: "An error occurred",
+      subtitle: "Try again later",
+    },
+    emptyMessage: {
+      title: "Cannot send the message",
+      subtitle: "Your message is empty",
+    },
   },
 }

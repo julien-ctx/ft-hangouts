@@ -7,15 +7,25 @@ interface Props {
   placeholder?: string | undefined
   value: string
   setNewValue: (newValue: string) => void
+  multiline?: boolean | undefined
+  maxLength?: number | undefined
 }
 
-export const TextInput = ({ placeholder, value, setNewValue }: Props) => {
+export const TextInput = ({
+  placeholder,
+  value,
+  setNewValue,
+  multiline,
+  maxLength,
+}: Props) => {
   return (
     <RNTextInput
       style={styles.input}
       value={value}
       onChangeText={(newValue) => setNewValue(newValue)}
       placeholder={placeholder}
+      multiline={multiline}
+      maxLength={maxLength}
     />
   )
 }

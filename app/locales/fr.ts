@@ -40,5 +40,17 @@ export default {
   },
   message: {
     placeholder: "Message texte",
+    permissionDenied: {
+      title: "Permission insuffisante",
+      subtitle: "Réessayez et acceptez la demande de permission",
+    },
+    error: {
+      title: "Une erreur est survenue",
+      subtitle: "Veuillez réessayer plus tard",
+    },
+    emptyMessage: {
+      title: "Impossible d'envoyer le message",
+      subtitle: "Votre message n'a pas de contenu",
+    },
   },
 }
