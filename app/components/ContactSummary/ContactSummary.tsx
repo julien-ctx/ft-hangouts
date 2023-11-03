@@ -33,14 +33,14 @@ export const ContactSummary = ({
       </View>
       <View style={styles.summaryButtons}>
         {Platform.OS === "android" && (
-          <Pressable onPress={onPressSendMessage}>
+          <Pressable onPress={onPressSendMessage} hitSlop={20}>
             <Image
               source={require("../../../assets/send.png")}
               style={styles.button}
             />
           </Pressable>
         )}
-        <Pressable onPress={onPressDelete}>
+        <Pressable onPress={onPressDelete} hitSlop={20}>
           <Image
             source={require("../../../assets/trash.png")}
             style={styles.button}

@@ -25,7 +25,7 @@ export const SingleMessage = ({ message }: Props) => {
       ]}
     >
       <Text style={[styles.messageText, { color: textColor }]}>
-        {message.message}
+        {message.content}
       </Text>
     </View>
   )

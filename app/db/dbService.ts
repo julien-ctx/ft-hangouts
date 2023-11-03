@@ -4,6 +4,7 @@ import {
   SQLiteDatabase,
 } from "react-native-sqlite-storage"
 import { Contact } from "../components/ContactSummary/ContactSummary.typing"
+import { Message } from "../components/SingleMessage/SingleMessage.typing"
 
 enablePromise(true)
 
@@ -38,9 +39,19 @@ export const createTables = async (db: SQLiteDatabase) => {
       email TEXT
 	  )
   `
+  const messagesQuery = `
+    CREATE TABLE IF NOT EXISTS Messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      phoneNumber TEXT,
+      content TEXT,
+      isReceived BOOLEAN,
+      FOREIGN KEY(phoneNumber) REFERENCES Contacts(phoneNumber)
+    )
+  `
   try {
     await db.executeSql(userPreferencesQuery)
     await db.executeSql(contactsQuery)
+    await db.executeSql(messagesQuery)
   } catch (error) {
     console.error(error)
     throw Error(`Failed to create tables`)
@@ -126,6 +137,31 @@ export const getSingleUserPreference = async (
   }
 }
 
+export const getDiscussion = async (
+  db: SQLiteDatabase,
+  phoneNumber: string
+): Promise<Message[]> => {
+  const query = `
+    SELECT content, isReceived
+    FROM Messages
+    WHERE phoneNumber = ?
+    ORDER BY id ASC
+  `
+  try {
+    const results = await db.executeSql(query, [phoneNumber])
+    const messages = []
+    if (results[0]?.rows?.length) {
+      for (let index = 0; index < results[0].rows.length; index++) {
+        messages.push(results[0].rows.item(index))
+      }
+    }
+    return messages
+  } catch (error) {
+    console.error(error)
+    throw Error(`Failed to get discussion for phone number ${phoneNumber}`)
+  }
+}
+
 /*****************************/
 
 export const addContact = async (db: SQLiteDatabase, contact: Contact) => {
@@ -144,6 +180,27 @@ export const addContact = async (db: SQLiteDatabase, contact: Contact) => {
   } catch (error) {
     console.error(error)
     throw Error("Failed to add contact")
+  }
+}
+
+export const addMessage = async (
+  db: SQLiteDatabase,
+  phoneNumber: string,
+  message: Message
+) => {
+  const query = `
+    INSERT INTO Messages (phoneNumber, content, isReceived)
+    VALUES (?, ?, ?)
+  `
+  try {
+    await db.executeSql(query, [
+      phoneNumber,
+      message.content,
+      message.isReceived ? 1 : 0,
+    ])
+  } catch (error) {
+    console.error(error)
+    throw Error(`Failed to add message for phone number ${phoneNumber}`)
   }
 }
 

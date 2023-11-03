@@ -1,4 +1,4 @@
 export type Message = {
   isReceived: boolean
-  message: string
+  content: string
 }

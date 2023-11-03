@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import {
   Alert,
   FlatList,
@@ -22,6 +22,7 @@ import { PERMISSIONS, request } from "react-native-permissions"
 import SmsAndroid from "react-native-get-sms-android"
 import { Message } from "../components/SingleMessage/SingleMessage.typing"
 import { SingleMessage } from "../components/SingleMessage/SingleMessage"
+import { addMessage, connectToDatabase, getDiscussion } from "../db/dbService"
 
 interface Props {
   contact: Contact
@@ -31,62 +32,22 @@ interface Props {
 export const MessageContact = ({ contact, onBackPress }: Props) => {
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
-
   const [message, setMessage] = useState<string>("")
   const [allMessages, setAllMessages] = useState<Message[]>([])
 
+  const loadDataCallback = useCallback(async () => {
+    try {
+      const db = await connectToDatabase()
+      const databaseMessages = await getDiscussion(db, contact.phoneNumber)
+      setAllMessages(databaseMessages)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [contact.phoneNumber])
+
   useEffect(() => {
-    setAllMessages([
-      { isReceived: false, message: "Salut c'est moi" },
-      {
-        isReceived: true,
-        message:
-          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
-      },
-      {
-        isReceived: false,
-        message:
-          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
-      },
-      {
-        isReceived: true,
-        message:
-          "dewopfurefireoufgjrtiohgfiderohfrouefhirjfhouehfuerhfiurfheriuhfreuifhreuffheruhrefiuerhfiurehuier",
-      },
-      { isReceived: false, message: "Salut c'est moi" },
-      {
-        isReceived: true,
-        message:
-          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
-      },
-      {
-        isReceived: false,
-        message:
-          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
-      },
-      {
-        isReceived: true,
-        message:
-          "dewopfurefireoufgjrtiohgfiderohfrouefhirjfhouehfuerhfiurfheriuhfreuifhreuffheruhrefiuerhfiurehuier",
-      },
-      { isReceived: false, message: "Salut c'est moi" },
-      {
-        isReceived: true,
-        message:
-          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
-      },
-      {
-        isReceived: false,
-        message:
-          "Salut c'est pas moi et je suis chiant car je prends beaucoup de place",
-      },
-      {
-        isReceived: true,
-        message:
-          "dewopfurefireoufgjrtiohgfiderohfrouefhirjfhouehfuerhfiurfheriuhfreuifhreuffheruhrefiuerhfiurehuier",
-      },
-    ])
-  }, [])
+    loadDataCallback()
+  }, [loadDataCallback])
 
   let names = `${contact.firstName} ${contact.name}`
   if (names.length > 15) {
@@ -107,13 +68,19 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
               locale.message.error.subtitle
             )
           },
-          () => {
-            console.log("SMS sent successfully")
+          async () => {
+            const newMessage = {
+              content: message,
+              isReceived: false,
+            }
             setMessage("")
+            const newMessageArray = [...allMessages, newMessage]
+            setAllMessages(newMessageArray)
+            const db = await connectToDatabase()
+            await addMessage(db, contact.phoneNumber, newMessage)
           }
         )
       } else {
-        console.log("Permission to send SMS denied")
         Alert.alert(
           locale.message.permissionDenied.title,
           locale.message.permissionDenied.subtitle
@@ -142,6 +109,7 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
           renderItem={({ item }) => <SingleMessage message={item} />}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
+          inverted
         />
       </View>
       <View style={[styles.container, styles.messageBox]}>
@@ -191,6 +159,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: spacing.sm,
+    flexDirection: "column-reverse",
   },
   allMessages: {
     marginVertical: spacing.sm,
