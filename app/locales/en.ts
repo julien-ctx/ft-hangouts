@@ -54,4 +54,9 @@ export default {
       subtitle: "Your message is empty",
     },
   },
+  permissionError: {
+    title: "Not enough permissions",
+    subtitle:
+      "Try to restart the app and even reinstall it if the issue persists",
+  },
 }

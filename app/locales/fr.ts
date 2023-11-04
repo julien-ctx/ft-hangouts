@@ -53,4 +53,9 @@ export default {
       subtitle: "Votre message n'a pas de contenu",
     },
   },
+  permissionError: {
+    title: "Permissions insuffisantes",
+    subtitle:
+      "Redemarrez completement l'application ou reinstallez la si cela persiste",
+  },
 }

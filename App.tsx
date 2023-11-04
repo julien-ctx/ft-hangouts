@@ -30,8 +30,13 @@ import { PERMISSIONS, request } from "react-native-permissions"
 import SmsListener from "react-native-android-sms-listener"
 import SmsAndroid from "react-native-get-sms-android"
 import { SQLiteDatabase } from "react-native-sqlite-storage"
+import { PermissionError } from "./app/screens/PermissionError"
 
-type CurrentScreen = "ContactList" | "AddContact" | "MessageContact"
+type CurrentScreen =
+  | "ContactList"
+  | "AddContact"
+  | "MessageContact"
+  | "PermissionError"
 
 export interface ScreenProps {
   currentScreen: CurrentScreen
@@ -129,11 +134,16 @@ function App(): JSX.Element {
     }
   }, [])
 
-  const askForPermissions = useCallback(async () => {
-    await request(PERMISSIONS.ANDROID.READ_SMS)
-    await request(PERMISSIONS.ANDROID.RECEIVE_SMS)
-    await request(PERMISSIONS.ANDROID.SEND_SMS)
-  }, [])
+  const askForPermissions = async () => {
+    const readSMSPermission = await request(PERMISSIONS.ANDROID.READ_SMS)
+    const receiveSMSPermission = await request(PERMISSIONS.ANDROID.RECEIVE_SMS)
+    const sendSMSPermission = await request(PERMISSIONS.ANDROID.SEND_SMS)
+    return (
+      readSMSPermission === "granted" &&
+      receiveSMSPermission === "granted" &&
+      sendSMSPermission === "granted"
+    )
+  }
 
   const setSmsListener = useCallback(() => {
     const subscription = SmsListener.addListener(
@@ -156,27 +166,31 @@ function App(): JSX.Element {
     loadDataCallback()
     let smsUnsubscribe: any = null
     if (Platform.OS === "android") {
-      askForPermissions()
-      smsUnsubscribe = setSmsListener()
+      askForPermissions().then((isGranted) => {
+        if (isGranted) {
+          smsUnsubscribe = setSmsListener()
+          getLastUsageDate()
+          handleAppStateChange().then((appStateSubscription) => {
+            return () => {
+              appStateSubscription?.remove()
+            }
+          })
+        } else {
+          setScreenData({ currentScreen: "PermissionError" })
+        }
+      })
+    } else {
+      getLastUsageDate()
+      handleAppStateChange().then((appStateSubscription) => {
+        return () => {
+          appStateSubscription?.remove()
+        }
+      })
     }
-    getLastUsageDate()
-    handleAppStateChange().then((appStateSubscription) => {
-      return () => {
-        appStateSubscription?.remove()
-      }
-    })
     return () => {
-      if (smsUnsubscribe) {
-        smsUnsubscribe?.remove()
-      }
+      smsUnsubscribe?.remove()
     }
-  }, [
-    loadDataCallback,
-    askForPermissions,
-    setSmsListener,
-    getLastUsageDate,
-    handleAppStateChange,
-  ])
+  }, [loadDataCallback, setSmsListener, getLastUsageDate, handleAppStateChange])
 
   return (
     <SafeAreaView style={styles.appBackground}>
@@ -185,6 +199,9 @@ function App(): JSX.Element {
           <View style={styles.screenContainer}>
             {!lastUsageDate && (
               <>
+                {screenData.currentScreen === "PermissionError" && (
+                  <PermissionError />
+                )}
                 {screenData.currentScreen === "ContactList" && (
                   <ContactList
                     contacts={contacts}
