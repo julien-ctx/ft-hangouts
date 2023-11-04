@@ -81,7 +81,7 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
           contact.phoneNumber,
           message,
           (fail: string) => {
-            console.log("Failed with this error: " + fail)
+            console.error("Failed with this error: " + fail)
             Alert.alert(
               locale.message.error.title,
               locale.message.error.subtitle

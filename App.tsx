@@ -23,6 +23,7 @@ import { MessageContact } from "./app/screens/MessageContact"
 import { PERMISSIONS, request } from "react-native-permissions"
 import SmsListener from "react-native-android-sms-listener"
 import SmsAndroid from "react-native-get-sms-android"
+import { SQLiteDatabase } from "react-native-sqlite-storage"
 
 type CurrentScreen = "ContactList" | "AddContact" | "MessageContact"
 
@@ -36,10 +37,9 @@ function App(): JSX.Element {
     currentScreen: "ContactList",
   })
   const [contacts, setContacts] = useState<Contact[]>([])
-
   const [lastUsageDate, setLastUsageDate] = useState<string>("")
 
-  const handleLastUsageDate = async () => {
+  const getLastUsageDate = useCallback(async () => {
     const db = await connectToDatabase()
     const databaseLastUsageDate = await getSingleUserPreference(
       db,
@@ -52,11 +52,42 @@ function App(): JSX.Element {
       }, 2000)
       return () => clearTimeout(timer)
     }
+  }, [])
+
+  const getBackgroundMessages = async (db: SQLiteDatabase) => {
+    const databaseLastUsageDate = await getSingleUserPreference(
+      db,
+      "lastUsageDate"
+    )
+    let filter = {
+      box: "inbox",
+      minDate: formatDateStringTimestamp(databaseLastUsageDate),
+      maxDate: Date.now(),
+    }
+
+    SmsAndroid.list(
+      JSON.stringify(filter),
+      (fail) => {
+        console.error("Failed with error: " + fail)
+      },
+      (count, smsList) => {
+        let incomingMessageList = JSON.parse(smsList)
+        incomingMessageList
+          ?.slice()
+          ?.reverse()
+          ?.forEach(async (item) => {
+            await addMessage(db, item.address, {
+              isReceived: true,
+              content: item.body,
+              timestamp: item.date,
+            })
+          })
+      }
+    )
   }
 
-  useEffect(() => {
-    handleLastUsageDate()
-    const appStateListener = AppState.addEventListener(
+  const handleAppStateChange = useCallback(async () => {
+    const subscription = AppState.addEventListener(
       "change",
       async (nextAppState) => {
         const db = await connectToDatabase()
@@ -65,39 +96,7 @@ function App(): JSX.Element {
           await updateSingleUserPreference(db, "lastUsageDate", stringDate)
           setLastUsageDate(stringDate)
         } else if (nextAppState === "active") {
-          const databaseLastUsageDate = await getSingleUserPreference(
-            db,
-            "lastUsageDate"
-          )
-          console.log(databaseLastUsageDate)
-          let filter = {
-            box: "inbox",
-            minDate: formatDateStringTimestamp(databaseLastUsageDate),
-            maxDate: Date.now(),
-            maxCount: 10,
-          }
-
-          SmsAndroid.list(
-            JSON.stringify(filter),
-            (fail) => {
-              console.log("Failed with this error: " + fail)
-            },
-            (count, smsList) => {
-              let arr = JSON.parse(smsList)
-              arr
-                .slice()
-                .reverse()
-                .forEach(async (item) => {
-                  console.log("Received", item.body)
-                  await addMessage(db, item.address, {
-                    isReceived: true,
-                    content: item.body,
-                    timestamp: item.date,
-                  })
-                })
-            }
-          )
-
+          await getBackgroundMessages(db)
           const timer = setTimeout(() => {
             setLastUsageDate("")
           }, 2000)
@@ -105,9 +104,7 @@ function App(): JSX.Element {
         }
       }
     )
-    return () => {
-      appStateListener?.remove()
-    }
+    return subscription
   }, [])
 
   const loadDataCallback = useCallback(async () => {
@@ -124,15 +121,13 @@ function App(): JSX.Element {
     }
   }, [])
 
-  const askForPermissions = async () => {
+  const askForPermissions = useCallback(async () => {
     await request(PERMISSIONS.ANDROID.READ_SMS)
     await request(PERMISSIONS.ANDROID.RECEIVE_SMS)
     await request(PERMISSIONS.ANDROID.SEND_SMS)
-  }
+  }, [])
 
-  useEffect(() => {
-    loadDataCallback()
-    askForPermissions()
+  const setSmsListener = useCallback(() => {
     const subscription = SmsListener.addListener(
       async (incomingMessage: any) => {
         if (incomingMessage.originatingAddress) {
@@ -146,8 +141,29 @@ function App(): JSX.Element {
         }
       }
     )
-    return () => subscription?.remove()
-  }, [loadDataCallback])
+    return subscription
+  }, [])
+
+  useEffect(() => {
+    loadDataCallback()
+    askForPermissions()
+    const smsUnsubscribe = setSmsListener()
+    getLastUsageDate()
+    handleAppStateChange().then((appStateSubscription) => {
+      return () => {
+        appStateSubscription.remove()
+      }
+    })
+    return () => {
+      smsUnsubscribe()
+    }
+  }, [
+    loadDataCallback,
+    askForPermissions,
+    setSmsListener,
+    getLastUsageDate,
+    handleAppStateChange,
+  ])
 
   return (
     <SafeAreaView style={styles.appBackground}>
