@@ -13,12 +13,16 @@ import {
 import { Contact } from "./app/components/ContactSummary/ContactSummary.typing"
 import { AddContact } from "./app/screens/AddContact"
 import { ColorProvider } from "./app/providers/color/ColorProvider"
-import { formatDateString } from "./app/utils/format/date"
+import {
+  formatDateString,
+  formatDateStringTimestamp,
+} from "./app/utils/format/date"
 import { LastUsage } from "./app/screens/LastUsage"
 import { colors } from "./app/utils/theme/colors"
 import { MessageContact } from "./app/screens/MessageContact"
 import { PERMISSIONS, request } from "react-native-permissions"
 import SmsListener from "react-native-android-sms-listener"
+import SmsAndroid from "react-native-get-sms-android"
 
 type CurrentScreen = "ContactList" | "AddContact" | "MessageContact"
 
@@ -61,6 +65,31 @@ function App(): JSX.Element {
           await updateSingleUserPreference(db, "lastUsageDate", stringDate)
           setLastUsageDate(stringDate)
         } else if (nextAppState === "active") {
+          const databaseLastUsageDate = await getSingleUserPreference(
+            db,
+            "lastUsageDate"
+          )
+          console.log(databaseLastUsageDate)
+          let filter = {
+            box: "inbox",
+            minDate: formatDateStringTimestamp(databaseLastUsageDate),
+            maxDate: Date.now(),
+            maxCount: 10,
+          }
+
+          SmsAndroid.list(
+            JSON.stringify(filter),
+            (fail) => {
+              console.log("Failed with this error: " + fail)
+            },
+            (count, smsList) => {
+              let arr = JSON.parse(smsList)
+              arr.forEach(function (object) {
+                console.log("-->" + object.body)
+              })
+            }
+          )
+
           const timer = setTimeout(() => {
             setLastUsageDate("")
           }, 2000)
