@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { AppState, SafeAreaView, StyleSheet, View } from "react-native"
+import {
+  AppState,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from "react-native"
 import { LanguageProvider } from "./app/providers/language/LanguageProvider"
 import { ContactList } from "./app/screens/ContactList"
 import {
@@ -67,15 +73,15 @@ function App(): JSX.Element {
 
     SmsAndroid.list(
       JSON.stringify(filter),
-      (fail) => {
+      (fail: any) => {
         console.error("Failed with error: " + fail)
       },
-      (count, smsList) => {
+      (count: any, smsList: any) => {
         let incomingMessageList = JSON.parse(smsList)
         incomingMessageList
           ?.slice()
           ?.reverse()
-          ?.forEach(async (item) => {
+          ?.forEach(async (item: any) => {
             await addMessage(db, item.address, {
               isReceived: true,
               content: item.body,
@@ -96,7 +102,9 @@ function App(): JSX.Element {
           await updateSingleUserPreference(db, "lastUsageDate", stringDate)
           setLastUsageDate(stringDate)
         } else if (nextAppState === "active") {
-          await getBackgroundMessages(db)
+          if (Platform.OS === "android") {
+            await getBackgroundMessages(db)
+          }
           const timer = setTimeout(() => {
             setLastUsageDate("")
           }, 2000)
@@ -146,16 +154,21 @@ function App(): JSX.Element {
 
   useEffect(() => {
     loadDataCallback()
-    askForPermissions()
-    const smsUnsubscribe = setSmsListener()
+    let smsUnsubscribe: any = null
+    if (Platform.OS === "android") {
+      askForPermissions()
+      smsUnsubscribe = setSmsListener()
+    }
     getLastUsageDate()
     handleAppStateChange().then((appStateSubscription) => {
       return () => {
-        appStateSubscription.remove()
+        appStateSubscription?.remove()
       }
     })
     return () => {
-      smsUnsubscribe()
+      if (smsUnsubscribe) {
+        smsUnsubscribe()
+      }
     }
   }, [
     loadDataCallback,

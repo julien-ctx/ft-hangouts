@@ -47,26 +47,22 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
     }
   }, [contact.phoneNumber])
 
-  useEffect(() => {
-    loadDataCallback()
-  }, [loadDataCallback])
-
-  useEffect(() => {
-    let subscription: any = null
-    const setListener = async () => {
-      subscription = SmsListener.addListener(async (incomingMessage: any) => {
+  const setSmsListener = useCallback(() => {
+    const subscription = SmsListener.addListener(
+      async (incomingMessage: any) => {
         if (incomingMessage.originatingAddress === contact.phoneNumber) {
           loadDataCallback()
         }
-      })
-    }
-    setListener()
-    return () => {
-      if (subscription) {
-        subscription.remove()
       }
-    }
-  }, [loadDataCallback, contact.phoneNumber])
+    )
+    return subscription
+  }, [contact.phoneNumber, loadDataCallback])
+
+  useEffect(() => {
+    loadDataCallback()
+    const smsUnsubscribe = setSmsListener()
+    return () => smsUnsubscribe()
+  }, [loadDataCallback, setSmsListener])
 
   let names = `${contact.firstName} ${contact.name}`
   if (names.length > 15) {
