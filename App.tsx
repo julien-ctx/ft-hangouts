@@ -84,9 +84,17 @@ function App(): JSX.Element {
             },
             (count, smsList) => {
               let arr = JSON.parse(smsList)
-              arr.forEach(function (object) {
-                console.log("-->" + object.body)
-              })
+              arr
+                .slice()
+                .reverse()
+                .forEach(async (item) => {
+                  console.log("Received", item.body)
+                  await addMessage(db, item.address, {
+                    isReceived: true,
+                    content: item.body,
+                    timestamp: item.date,
+                  })
+                })
             }
           )
 
