@@ -17,7 +17,7 @@ export default {
         "Don't forget to check that the phone number and email have a correct format",
     },
     alreadyExistingContactAlert: {
-      title: "Error while adding contact",
+      title: "Error while saving contact details",
       subtitle:
         "There is already a contact with the same phone number in the database",
     },

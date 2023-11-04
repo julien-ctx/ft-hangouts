@@ -17,7 +17,7 @@ export default {
         "Assurez-vous que le numéro de téléphone et l'email ont un format correct",
     },
     alreadyExistingContactAlert: {
-      title: "Impossible d'ajouter le contact",
+      title: "Une erreur est survenue",
       subtitle: "Il existe déjà un contact avec le même numéro de téléphone",
     },
   },
