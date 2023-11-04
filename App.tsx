@@ -167,7 +167,7 @@ function App(): JSX.Element {
     })
     return () => {
       if (smsUnsubscribe) {
-        smsUnsubscribe()
+        smsUnsubscribe?.remove()
       }
     }
   }, [

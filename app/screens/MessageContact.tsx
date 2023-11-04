@@ -61,7 +61,7 @@ export const MessageContact = ({ contact, onBackPress }: Props) => {
   useEffect(() => {
     loadDataCallback()
     const smsUnsubscribe = setSmsListener()
-    return () => smsUnsubscribe()
+    return () => smsUnsubscribe?.remove()
   }, [loadDataCallback, setSmsListener])
 
   let names = `${contact.firstName} ${contact.name}`
