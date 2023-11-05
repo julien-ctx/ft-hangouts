@@ -127,6 +127,7 @@ function App(): JSX.Element {
       await createTables(db)
       const databaseContacts = await getContacts(db)
       if (databaseContacts.length) {
+        await getBackgroundMessages(db)
         setContacts(databaseContacts)
       }
     } catch (error) {
