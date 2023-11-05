@@ -4,6 +4,7 @@ import {
   Platform,
   SafeAreaView,
   StyleSheet,
+  ToastAndroid,
   View,
 } from "react-native"
 import { LanguageProvider } from "./app/providers/language/LanguageProvider"
@@ -23,7 +24,6 @@ import {
   formatDateString,
   formatDateStringTimestamp,
 } from "./app/utils/format/date"
-import { LastUsage } from "./app/screens/LastUsage"
 import { colors } from "./app/utils/theme/colors"
 import { MessageContact } from "./app/screens/MessageContact"
 import { PERMISSIONS, request } from "react-native-permissions"
@@ -48,7 +48,6 @@ function App(): JSX.Element {
     currentScreen: "ContactList",
   })
   const [contacts, setContacts] = useState<Contact[]>([])
-  const [lastUsageDate, setLastUsageDate] = useState<string>("")
 
   const getLastUsageDate = useCallback(async () => {
     const db = await connectToDatabase()
@@ -57,11 +56,7 @@ function App(): JSX.Element {
       "lastUsageDate"
     )
     if (databaseLastUsageDate) {
-      setLastUsageDate(databaseLastUsageDate)
-      const timer = setTimeout(() => {
-        setLastUsageDate("")
-      }, 2000)
-      return () => clearTimeout(timer)
+      ToastAndroid.show(databaseLastUsageDate, 3)
     }
   }, [])
 
@@ -105,15 +100,17 @@ function App(): JSX.Element {
         if (nextAppState === "background") {
           const stringDate = formatDateString(new Date())
           await updateSingleUserPreference(db, "lastUsageDate", stringDate)
-          setLastUsageDate(stringDate)
         } else if (nextAppState === "active") {
           if (Platform.OS === "android") {
             await getBackgroundMessages(db)
+            const lastUsageDate = await getSingleUserPreference(
+              db,
+              "lastUsageDate"
+            )
+            if (lastUsageDate) {
+              ToastAndroid.show(lastUsageDate.toString(), 3)
+            }
           }
-          const timer = setTimeout(() => {
-            setLastUsageDate("")
-          }, 2000)
-          return () => clearTimeout(timer)
         }
       }
     )
@@ -127,7 +124,9 @@ function App(): JSX.Element {
       await createTables(db)
       const databaseContacts = await getContacts(db)
       if (databaseContacts.length) {
-        await getBackgroundMessages(db)
+        if (Platform.OS === "android") {
+          await getBackgroundMessages(db)
+        }
         setContacts(databaseContacts)
       }
     } catch (error) {
@@ -180,13 +179,6 @@ function App(): JSX.Element {
           setScreenData({ currentScreen: "PermissionError" })
         }
       })
-    } else {
-      getLastUsageDate()
-      handleAppStateChange().then((appStateSubscription) => {
-        return () => {
-          appStateSubscription?.remove()
-        }
-      })
     }
     return () => {
       smsUnsubscribe?.remove()
@@ -198,40 +190,35 @@ function App(): JSX.Element {
       <LanguageProvider>
         <ColorProvider>
           <View style={styles.screenContainer}>
-            {!lastUsageDate && (
-              <>
-                {screenData.currentScreen === "PermissionError" && (
-                  <PermissionError />
-                )}
-                {screenData.currentScreen === "ContactList" && (
-                  <ContactList
-                    contacts={contacts}
-                    setContacts={setContacts}
-                    setScreenData={setScreenData}
-                  />
-                )}
-                {screenData.currentScreen === "AddContact" && (
-                  <AddContact
-                    contacts={contacts}
-                    setContacts={setContacts}
-                    setScreenData={setScreenData}
-                  />
-                )}
-                {screenData.currentScreen === "MessageContact" &&
-                  screenData.data && (
-                    <MessageContact
-                      contact={screenData.data}
-                      onBackPress={() =>
-                        setScreenData({
-                          currentScreen: "ContactList",
-                          data: undefined,
-                        })
-                      }
-                    />
-                  )}
-              </>
+            {screenData.currentScreen === "PermissionError" && (
+              <PermissionError />
             )}
-            {lastUsageDate && <LastUsage date={lastUsageDate} />}
+            {screenData.currentScreen === "ContactList" && (
+              <ContactList
+                contacts={contacts}
+                setContacts={setContacts}
+                setScreenData={setScreenData}
+              />
+            )}
+            {screenData.currentScreen === "AddContact" && (
+              <AddContact
+                contacts={contacts}
+                setContacts={setContacts}
+                setScreenData={setScreenData}
+              />
+            )}
+            {screenData.currentScreen === "MessageContact" &&
+              screenData.data && (
+                <MessageContact
+                  contact={screenData.data}
+                  onBackPress={() =>
+                    setScreenData({
+                      currentScreen: "ContactList",
+                      data: undefined,
+                    })
+                  }
+                />
+              )}
           </View>
         </ColorProvider>
       </LanguageProvider>
