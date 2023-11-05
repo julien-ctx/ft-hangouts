@@ -13,7 +13,7 @@ export default {
       email: "Email",
     },
     wrongFieldsAlert: {
-      title: "Certains champs sont manquants ou incorrect",
+      title: "Certains champs sont manquants ou incorrects",
       subtitle:
         "Assurez-vous que le numéro de téléphone et l'email ont un format correct",
     },
@@ -23,14 +23,14 @@ export default {
     },
   },
   contactDetails: {
-    edit: "Modifier contact",
+    edit: "Modifier le contact",
   },
   editContact: {
     save: "Sauvegarder",
   },
   confirmationAlert: {
     title: "Suppression de contact",
-    subtitle: "Etes-vous sur de vouloir supprimer ce contact ?",
+    subtitle: "Êtes-vous sûr de vouloir supprimer ce contact ?",
     confirm: "Oui",
     cancel: "Non",
   },
@@ -57,6 +57,6 @@ export default {
   permissionError: {
     title: "Permissions insuffisantes",
     subtitle:
-      "Redemarrez completement l'application ou reinstallez la si cela persiste",
+      "Redémarrez complètement l'application ou réinstallez-la si cela persiste",
   },
 }
