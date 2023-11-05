@@ -18,7 +18,7 @@ This project is a mobile app developed using **React Native** to manage and inte
 - Create a contact with at least 5 details.
 - Edit existing contact details.
 - Delete contacts.
-- 
+
 ### Contact Interaction
 - Send and receive text messages from recorded contacts.
 - Conversation history with a proper view of sender and receiver in conversations.
