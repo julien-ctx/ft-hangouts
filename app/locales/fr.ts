@@ -8,6 +8,7 @@ export default {
     inputPlaceholders: {
       firstName: "Prénom",
       name: "Nom",
+      nickname: "Surnom",
       phoneNumber: "Numéro de téléphone",
       email: "Email",
     },
