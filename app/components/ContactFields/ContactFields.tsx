@@ -6,6 +6,7 @@ import fr from "../../locales/fr"
 import React from "react"
 import { TextInput } from "../TextInput/TextInput"
 import {
+  Alert,
   Image,
   Keyboard,
   KeyboardAvoidingView,
@@ -23,6 +24,7 @@ interface Props {
   buttonText: string
   buttonIcon?: object | undefined
   initialContact?: Contact
+  contacts: Contact[]
 }
 
 export const ContactFields = ({
@@ -30,6 +32,7 @@ export const ContactFields = ({
   buttonText,
   buttonIcon,
   initialContact = { firstName: "", name: "", phoneNumber: "", email: "" },
+  contacts,
 }: Props) => {
   const { language } = useContext(LanguageContext)
   const locale = language === "en" ? en : fr
@@ -38,6 +41,34 @@ export const ContactFields = ({
   const [name, setName] = useState(initialContact.name)
   const [phoneNumber, setPhoneNumber] = useState(initialContact.phoneNumber)
   const [email, setEmail] = useState(initialContact.email)
+
+  const handleSaveFields = () => {
+    if (
+      initialContact.firstName &&
+      initialContact.name &&
+      initialContact.phoneNumber &&
+      initialContact.email &&
+      !contacts.find(
+        (item) =>
+          item.phoneNumber === phoneNumber &&
+          initialContact.phoneNumber !== phoneNumber
+      )
+    ) {
+      onPress({ firstName, name, phoneNumber, email })
+    } else if (
+      !initialContact.firstName &&
+      !initialContact.name &&
+      !initialContact.phoneNumber &&
+      !initialContact.email
+    ) {
+      onPress({ firstName, name, phoneNumber, email })
+    } else {
+      Alert.alert(
+        locale.addContact.alreadyExistingContactAlert.title,
+        locale.addContact.alreadyExistingContactAlert.subtitle
+      )
+    }
+  }
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -74,7 +105,7 @@ export const ContactFields = ({
             />
             <View style={styles.marginView}>
               <PlainButton
-                onPress={() => onPress({ firstName, name, phoneNumber, email })}
+                onPress={() => handleSaveFields()}
                 text={buttonText}
                 icon={buttonIcon}
               />

@@ -17,7 +17,7 @@ export default {
         "Assurez-vous que le numéro de téléphone et l'email ont un format correct",
     },
     alreadyExistingContactAlert: {
-      title: "Impossible d'ajouter le contact",
+      title: "Une erreur est survenue",
       subtitle: "Il existe déjà un contact avec le même numéro de téléphone",
     },
   },
@@ -52,5 +52,10 @@ export default {
       title: "Impossible d'envoyer le message",
       subtitle: "Votre message n'a pas de contenu",
     },
+  },
+  permissionError: {
+    title: "Permissions insuffisantes",
+    subtitle:
+      "Redemarrez completement l'application ou reinstallez la si cela persiste",
   },
 }

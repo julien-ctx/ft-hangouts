@@ -58,6 +58,7 @@ export const AddContact = ({ setScreenData, contacts, setContacts }: Props) => {
           onPress={handleAddContact}
           buttonIcon={plus}
           buttonText={locale.addContact.submitButtonTitle}
+          contacts={contacts}
         />
       </View>
       <FooterNavigation

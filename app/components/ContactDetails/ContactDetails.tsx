@@ -27,13 +27,6 @@ export const ContactDetails = ({
   const handleContactEdition = async (contactToEdit: Contact) => {
     const db = await connectToDatabase()
     if (
-      contacts.find((item) => item.phoneNumber === contactToEdit.phoneNumber)
-    ) {
-      Alert.alert(
-        locale.addContact.alreadyExistingContactAlert.title,
-        locale.addContact.alreadyExistingContactAlert.subtitle
-      )
-    } else if (
       !checkAllFields(
         contactToEdit.firstName,
         contactToEdit.name,
@@ -61,6 +54,7 @@ export const ContactDetails = ({
         initialContact={contact}
         onPress={handleContactEdition}
         buttonText={locale.editContact.save}
+        contacts={contacts}
       />
     </View>
   )

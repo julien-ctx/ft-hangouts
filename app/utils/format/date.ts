@@ -18,3 +18,17 @@ export const formatDateStringMessage = (date: Date) => {
 
   return `${month}/${day}/${year} - ${hours}:${minutes}`
 }
+
+export const formatDateStringTimestamp = (dateString: string | null) => {
+  if (dateString) {
+    const [datePart, timePart] = dateString.split(" - ")
+    const [month, day, year] = datePart.split("/").map(Number)
+    const [hours, minutes, seconds] = timePart.split(":").map(Number)
+
+    const dateObject = new Date(year, month - 1, day, hours, minutes, seconds)
+
+    return dateObject.getTime()
+  } else {
+    return Date.now()
+  }
+}

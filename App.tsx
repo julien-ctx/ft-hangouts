@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { AppState, SafeAreaView, StyleSheet, View } from "react-native"
+import {
+  AppState,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from "react-native"
 import { LanguageProvider } from "./app/providers/language/LanguageProvider"
 import { ContactList } from "./app/screens/ContactList"
 import {
@@ -13,14 +19,24 @@ import {
 import { Contact } from "./app/components/ContactSummary/ContactSummary.typing"
 import { AddContact } from "./app/screens/AddContact"
 import { ColorProvider } from "./app/providers/color/ColorProvider"
-import { formatDateString } from "./app/utils/format/date"
+import {
+  formatDateString,
+  formatDateStringTimestamp,
+} from "./app/utils/format/date"
 import { LastUsage } from "./app/screens/LastUsage"
 import { colors } from "./app/utils/theme/colors"
 import { MessageContact } from "./app/screens/MessageContact"
 import { PERMISSIONS, request } from "react-native-permissions"
 import SmsListener from "react-native-android-sms-listener"
+import SmsAndroid from "react-native-get-sms-android"
+import { SQLiteDatabase } from "react-native-sqlite-storage"
+import { PermissionError } from "./app/screens/PermissionError"
 
-type CurrentScreen = "ContactList" | "AddContact" | "MessageContact"
+type CurrentScreen =
+  | "ContactList"
+  | "AddContact"
+  | "MessageContact"
+  | "PermissionError"
 
 export interface ScreenProps {
   currentScreen: CurrentScreen
@@ -32,10 +48,9 @@ function App(): JSX.Element {
     currentScreen: "ContactList",
   })
   const [contacts, setContacts] = useState<Contact[]>([])
-
   const [lastUsageDate, setLastUsageDate] = useState<string>("")
 
-  const handleLastUsageDate = async () => {
+  const getLastUsageDate = useCallback(async () => {
     const db = await connectToDatabase()
     const databaseLastUsageDate = await getSingleUserPreference(
       db,
@@ -48,11 +63,42 @@ function App(): JSX.Element {
       }, 2000)
       return () => clearTimeout(timer)
     }
+  }, [])
+
+  const getBackgroundMessages = async (db: SQLiteDatabase) => {
+    const databaseLastUsageDate = await getSingleUserPreference(
+      db,
+      "lastUsageDate"
+    )
+    let filter = {
+      box: "inbox",
+      minDate: formatDateStringTimestamp(databaseLastUsageDate),
+      maxDate: Date.now(),
+    }
+
+    SmsAndroid.list(
+      JSON.stringify(filter),
+      (fail: any) => {
+        console.error("Failed with error: " + fail)
+      },
+      (count: any, smsList: any) => {
+        let incomingMessageList = JSON.parse(smsList)
+        incomingMessageList
+          ?.slice()
+          ?.reverse()
+          ?.forEach(async (item: any) => {
+            await addMessage(db, item.address, {
+              isReceived: true,
+              content: item.body,
+              timestamp: item.date,
+            })
+          })
+      }
+    )
   }
 
-  useEffect(() => {
-    handleLastUsageDate()
-    const appStateListener = AppState.addEventListener(
+  const handleAppStateChange = useCallback(async () => {
+    const subscription = AppState.addEventListener(
       "change",
       async (nextAppState) => {
         const db = await connectToDatabase()
@@ -61,6 +107,9 @@ function App(): JSX.Element {
           await updateSingleUserPreference(db, "lastUsageDate", stringDate)
           setLastUsageDate(stringDate)
         } else if (nextAppState === "active") {
+          if (Platform.OS === "android") {
+            await getBackgroundMessages(db)
+          }
           const timer = setTimeout(() => {
             setLastUsageDate("")
           }, 2000)
@@ -68,9 +117,7 @@ function App(): JSX.Element {
         }
       }
     )
-    return () => {
-      appStateListener?.remove()
-    }
+    return subscription
   }, [])
 
   const loadDataCallback = useCallback(async () => {
@@ -88,14 +135,17 @@ function App(): JSX.Element {
   }, [])
 
   const askForPermissions = async () => {
-    await request(PERMISSIONS.ANDROID.READ_SMS)
-    await request(PERMISSIONS.ANDROID.RECEIVE_SMS)
-    await request(PERMISSIONS.ANDROID.SEND_SMS)
+    const readSMSPermission = await request(PERMISSIONS.ANDROID.READ_SMS)
+    const receiveSMSPermission = await request(PERMISSIONS.ANDROID.RECEIVE_SMS)
+    const sendSMSPermission = await request(PERMISSIONS.ANDROID.SEND_SMS)
+    return (
+      readSMSPermission === "granted" &&
+      receiveSMSPermission === "granted" &&
+      sendSMSPermission === "granted"
+    )
   }
 
-  useEffect(() => {
-    loadDataCallback()
-    askForPermissions()
+  const setSmsListener = useCallback(() => {
     const subscription = SmsListener.addListener(
       async (incomingMessage: any) => {
         if (incomingMessage.originatingAddress) {
@@ -109,8 +159,38 @@ function App(): JSX.Element {
         }
       }
     )
-    return () => subscription?.remove()
-  }, [loadDataCallback])
+    return subscription
+  }, [])
+
+  useEffect(() => {
+    loadDataCallback()
+    let smsUnsubscribe: any = null
+    if (Platform.OS === "android") {
+      askForPermissions().then((isGranted) => {
+        if (isGranted) {
+          smsUnsubscribe = setSmsListener()
+          getLastUsageDate()
+          handleAppStateChange().then((appStateSubscription) => {
+            return () => {
+              appStateSubscription?.remove()
+            }
+          })
+        } else {
+          setScreenData({ currentScreen: "PermissionError" })
+        }
+      })
+    } else {
+      getLastUsageDate()
+      handleAppStateChange().then((appStateSubscription) => {
+        return () => {
+          appStateSubscription?.remove()
+        }
+      })
+    }
+    return () => {
+      smsUnsubscribe?.remove()
+    }
+  }, [loadDataCallback, setSmsListener, getLastUsageDate, handleAppStateChange])
 
   return (
     <SafeAreaView style={styles.appBackground}>
@@ -119,6 +199,9 @@ function App(): JSX.Element {
           <View style={styles.screenContainer}>
             {!lastUsageDate && (
               <>
+                {screenData.currentScreen === "PermissionError" && (
+                  <PermissionError />
+                )}
                 {screenData.currentScreen === "ContactList" && (
                   <ContactList
                     contacts={contacts}
