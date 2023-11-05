@@ -1,79 +1,62 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Hangouts: A Contact Manager Mobile App | 42
 
-# Getting Started
+This project is a mobile app developed using **React Native** to manage and interact with contacts. The application has a variety of features that enhance user experience and functionality.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-## Step 1: Start the Metro Server
+<p align="center">
+  <img src="https://github.com/julien-ctx/ft-hangouts/blob/911e04098475af3fc67243d61988e93680e6eafc/assets/readMe/contactList.jpg" width="23%" />
+  <img src="https://github.com/julien-ctx/ft-hangouts/blob/911e04098475af3fc67243d61988e93680e6eafc/assets/readMe/messageHistory.jpg" width="23%" style="margin-left:1%;margin-right:1%" />
+  <img src="https://github.com/julien-ctx/ft-hangouts/blob/911e04098475af3fc67243d61988e93680e6eafc/assets/readMe/contactFields.jpg" width="23%" style="margin-left:1%;margin-right:1%" />
+  <img src="https://github.com/julien-ctx/ft-hangouts/blob/911e04098475af3fc67243d61988e93680e6eafc/assets/readMe/delete.jpg" width="23%" />
+</p>
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## Features
 
-```bash
-# using npm
-npm start
+### Contact Management
 
-# OR using Yarn
-yarn start
-```
+- Create a contact with at least 5 details.
+- Edit existing contact details.
+- Delete contacts.
+- 
+### Contact Interaction
+- Send and receive text messages from recorded contacts.
+- Conversation history with a proper view of sender and receiver in conversations.
 
-## Step 2: Start your Application
+### Homepage
+- A summary for each contact.
+- Click on each contact to view their full details.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+### Persistent Storage
+- Contacts are recorded persistently using an SQLite database.
+- Custom contact table created for this app, not using the shared contact table.
+- User preferences, such as theme color and language are saved persistently.
+  
+### Localization
+- The app supports two different languages: english and french.
+- Automatic system language detection
+  
+### App Usability
+- Works in both landscape and portrait modes.
 
-### For Android
+### App Backgrounding
+- Saves the date when the app is set in the background.
+- Shows a toast with the saved date when returning to the app.
 
-```bash
-# using npm
-npm run android
+## Getting Started
 
-# OR using Yarn
-yarn android
-```
+Clone the project using the following command: `git@github.com:julien-ctx/ft-hangouts.git`
 
-### For iOS
+Install the dependencies: `cd ft-hangouts && yarn install`
 
-```bash
-# using npm
-npm run ios
+Use `yarn ios` to build and open the app on iOS (XCode Simulator), or `yarn android` to build and run on an Android device (Android Studio Simulator).
 
-# OR using Yarn
-yarn ios
-```
+### Build on a physical Android device
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Connect your Android device to your computer, with USB debugging set to **ON**. Then, find your device ID with `adb devices`.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+As soon as you get it, run the following command: `adb -s [DEVICE_ID] reverse tcp:8081 tcp:8081`.
 
-## Step 3: Modifying your App
+After these steps, you can run `yarn android` and download the app on your physical device.
 
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+*NB: messaging is unavailable on iOS because of the OS restrictions.*
