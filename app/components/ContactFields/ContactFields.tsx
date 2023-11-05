@@ -87,21 +87,27 @@ export const ContactFields = ({
               placeholder={locale.addContact.inputPlaceholders.firstName}
               value={firstName}
               setNewValue={setFirstName}
+              autoCapitalize="words"
             />
             <TextInput
               placeholder={locale.addContact.inputPlaceholders.name}
               value={name}
               setNewValue={setName}
+              autoCapitalize="words"
             />
             <TextInput
               placeholder={locale.addContact.inputPlaceholders.phoneNumber}
               value={phoneNumber}
               setNewValue={setPhoneNumber}
+              autoCapitalize="none"
+              autoCorrect={false}
             />
             <TextInput
               placeholder={locale.addContact.inputPlaceholders.email}
               value={email}
               setNewValue={setEmail}
+              autoCapitalize="none"
+              autoCorrect={false}
             />
             <View style={styles.marginView}>
               <PlainButton

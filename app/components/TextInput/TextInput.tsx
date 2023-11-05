@@ -9,6 +9,8 @@ interface Props {
   setNewValue: (newValue: string) => void
   multiline?: boolean | undefined
   maxLength?: number | undefined
+  autoCorrect?: boolean | undefined
+  autoCapitalize?: "none" | "sentences" | "words" | "characters" | undefined
 }
 
 export const TextInput = ({
@@ -17,6 +19,8 @@ export const TextInput = ({
   setNewValue,
   multiline,
   maxLength,
+  autoCorrect,
+  autoCapitalize,
 }: Props) => {
   return (
     <RNTextInput
@@ -27,6 +31,8 @@ export const TextInput = ({
       placeholderTextColor={colors.palette.grey400}
       multiline={multiline}
       maxLength={maxLength}
+      autoCorrect={autoCorrect}
+      autoCapitalize={autoCapitalize}
     />
   )
 }
