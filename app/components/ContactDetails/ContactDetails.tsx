@@ -30,6 +30,7 @@ export const ContactDetails = ({
       !checkAllFields(
         contactToEdit.firstName,
         contactToEdit.name,
+        contactToEdit.nickname,
         contactToEdit.phoneNumber,
         contactToEdit.email
       )

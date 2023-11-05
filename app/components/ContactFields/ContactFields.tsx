@@ -31,7 +31,13 @@ export const ContactFields = ({
   onPress,
   buttonText,
   buttonIcon,
-  initialContact = { firstName: "", name: "", phoneNumber: "", email: "" },
+  initialContact = {
+    firstName: "",
+    name: "",
+    nickname: "",
+    phoneNumber: "",
+    email: "",
+  },
   contacts,
 }: Props) => {
   const { language } = useContext(LanguageContext)
@@ -39,6 +45,7 @@ export const ContactFields = ({
 
   const [firstName, setFirstName] = useState(initialContact.firstName)
   const [name, setName] = useState(initialContact.name)
+  const [nickname, setNickname] = useState(initialContact.nickname)
   const [phoneNumber, setPhoneNumber] = useState(initialContact.phoneNumber)
   const [email, setEmail] = useState(initialContact.email)
 
@@ -46,6 +53,7 @@ export const ContactFields = ({
     if (
       initialContact.firstName &&
       initialContact.name &&
+      initialContact.nickname &&
       initialContact.phoneNumber &&
       initialContact.email &&
       !contacts.find(
@@ -54,14 +62,15 @@ export const ContactFields = ({
           initialContact.phoneNumber !== phoneNumber
       )
     ) {
-      onPress({ firstName, name, phoneNumber, email })
+      onPress({ firstName, name, nickname, phoneNumber, email })
     } else if (
       !initialContact.firstName &&
       !initialContact.name &&
+      !initialContact.nickname &&
       !initialContact.phoneNumber &&
       !initialContact.email
     ) {
-      onPress({ firstName, name, phoneNumber, email })
+      onPress({ firstName, name, nickname, phoneNumber, email })
     } else {
       Alert.alert(
         locale.addContact.alreadyExistingContactAlert.title,
@@ -93,6 +102,12 @@ export const ContactFields = ({
               placeholder={locale.addContact.inputPlaceholders.name}
               value={name}
               setNewValue={setName}
+              autoCapitalize="words"
+            />
+            <TextInput
+              placeholder={locale.addContact.inputPlaceholders.nickname}
+              value={nickname}
+              setNewValue={setNickname}
               autoCapitalize="words"
             />
             <TextInput

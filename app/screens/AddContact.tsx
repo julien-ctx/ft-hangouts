@@ -33,6 +33,7 @@ export const AddContact = ({ setScreenData, contacts, setContacts }: Props) => {
       const areFieldsCorrect = checkAllFields(
         contact.firstName,
         contact.name,
+        contact.nickname,
         contact.phoneNumber,
         contact.email
       )

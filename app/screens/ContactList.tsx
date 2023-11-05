@@ -16,7 +16,11 @@ import en from "../locales/en"
 import fr from "../locales/fr"
 import { LanguageContext } from "../providers/language/LanguageContext"
 import { ScreenProps } from "../../App"
-import { connectToDatabase, removeContact } from "../db/dbService"
+import {
+  connectToDatabase,
+  removeAllMessages,
+  removeContact,
+} from "../db/dbService"
 import plusButton from "../../assets/plusButton.png"
 import { ContactDetails } from "../components/ContactDetails/ContactDetails"
 import { FooterNavigation } from "../components/FooterNavigation/FooterNavigation"
@@ -60,7 +64,8 @@ export const ContactList = ({
             text: locale.confirmationAlert.confirm,
             onPress: async () => {
               const db = await connectToDatabase()
-              removeContact(db, contactToDelete)
+              await removeContact(db, contactToDelete)
+              await removeAllMessages(db, contactToDelete.phoneNumber)
               const newContactArray = contacts.filter(
                 (currentContact) => currentContact !== contactToDelete
               )

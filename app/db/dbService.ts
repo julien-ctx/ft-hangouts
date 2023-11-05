@@ -35,6 +35,7 @@ export const createTables = async (db: SQLiteDatabase) => {
 	  CREATE TABLE IF NOT EXISTS Contacts (
       firstName TEXT,
       name TEXT,
+      nickname TEXT,
       phoneNumber TEXT,
       email TEXT
 	  )
@@ -78,6 +79,22 @@ export const removeTables = async (db: SQLiteDatabase) => {
   } catch (error) {
     console.error(error)
     throw Error(`Failed to drop tables`)
+  }
+}
+
+export const removeAllMessages = async (
+  db: SQLiteDatabase,
+  phoneNumber: string
+) => {
+  const deleteQuery = `
+    DELETE FROM Messages
+    WHERE phoneNumber = ?
+  `
+  try {
+    await db.executeSql(deleteQuery, [phoneNumber])
+  } catch (error) {
+    console.error(error)
+    throw Error(`Failed to remove all messages for phone number ${phoneNumber}`)
   }
 }
 
@@ -167,12 +184,13 @@ export const getDiscussion = async (
 
 export const addContact = async (db: SQLiteDatabase, contact: Contact) => {
   const insertQuery = `
-	  INSERT INTO Contacts (firstName, name, phoneNumber, email)
-	  VALUES (?, ?, ?, ?)
+	  INSERT INTO Contacts (firstName, name, nickname, phoneNumber, email)
+	  VALUES (?, ?, ?, ?, ?)
 	`
   const values = [
     contact.firstName,
     contact.name,
+    contact.nickname,
     contact.phoneNumber,
     contact.email,
   ]
@@ -227,12 +245,13 @@ export const updateContact = async (
 ) => {
   const updateQuery = `
     UPDATE Contacts
-    SET firstName = ?, name = ?, phoneNumber = ?, email = ?
+    SET firstName = ?, name = ?, nickname = ?, phoneNumber = ?, email = ?
     WHERE phoneNumber = ?
   `
   const values = [
     updatedContact.firstName,
     updatedContact.name,
+    updatedContact.nickname,
     updatedContact.phoneNumber,
     updatedContact.email,
     phoneNumber,
