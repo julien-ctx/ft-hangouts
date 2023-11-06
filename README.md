@@ -47,7 +47,7 @@ This project is a mobile app developed using **React Native** to manage and inte
 
 Clone the project using the following command: `git@github.com:julien-ctx/ft-hangouts.git`
 
-Install the dependencies: `cd ft-hangouts && yarn install`
+Install the dependencies: `cd ft-hangouts && yarn setup`
 
 Use `yarn ios` to build and open the app on iOS (XCode Simulator), or `yarn android` to build and run on an Android device (Android Studio Simulator).
 
