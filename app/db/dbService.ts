@@ -61,6 +61,10 @@ export const createTables = async (db: SQLiteDatabase) => {
 }
 
 export const clearTable = async (db: SQLiteDatabase, tableName: string) => {
+  const allowedTables = ["Contacts", "UserPreferences", "Messages"]
+  if (!allowedTables.includes(tableName)) {
+    throw new Error("Invalid table name")
+  }
   const query = `DELETE FROM ${tableName}`
   try {
     await db.executeSql(query)
@@ -140,10 +144,17 @@ export const getSingleUserPreference = async (
   db: SQLiteDatabase,
   userPreference: string
 ): Promise<string | null> => {
+  const allowedPreferences = [
+    "colorPreference",
+    "languagePreference",
+    "lastUsageDate",
+  ]
+  if (!allowedPreferences.includes(userPreference)) {
+    throw new Error("Invalid user preference")
+  }
+  const query = `SELECT ${userPreference} FROM UserPreferences WHERE id = 1`
   try {
-    const results = await db.executeSql(
-      `SELECT ${userPreference} FROM UserPreferences WHERE id = 1`
-    )
+    const results = await db.executeSql(query)
     if (results[0]?.rows?.length) {
       return results[0].rows.item(0)[userPreference]
     } else {
@@ -269,6 +280,14 @@ export const updateSingleUserPreference = async (
   userPreference: string,
   newValue: string
 ) => {
+  const allowedPreferences = [
+    "colorPreference",
+    "languagePreference",
+    "lastUsageDate",
+  ]
+  if (!allowedPreferences.includes(userPreference)) {
+    throw new Error("Invalid user preference")
+  }
   const query = `
       INSERT INTO UserPreferences (id, ${userPreference})
       VALUES (1, ?)

@@ -6,7 +6,7 @@ import en from "../../locales/en"
 import fr from "../../locales/fr"
 import { ContactFields } from "../ContactFields/ContactFields"
 import { connectToDatabase, updateContact } from "../../db/dbService"
-import { checkAllFields } from "../../utils/format/form"
+import { checkAllFields, haveSameFields } from "../../utils/format/form"
 
 interface Props {
   contact: Contact
@@ -39,6 +39,8 @@ export const ContactDetails = ({
         locale.addContact.wrongFieldsAlert.title,
         locale.addContact.wrongFieldsAlert.subtitle
       )
+    } else if (haveSameFields(contact, contactToEdit)) {
+      setShowContactDetails(null)
     } else {
       await updateContact(db, contact.phoneNumber, contactToEdit)
       const newContactList = contacts.filter(
